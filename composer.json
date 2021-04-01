@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^5.5.9|^7.0"
+        "php": "^7.0"
     },
     "autoload": {
         "psr-4": {
@@ -22,6 +22,13 @@
         "files": [
             "src/Helpers/path_helper.php"
         ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Exhum4n\\Components\\Providers\\ComponentsServiceProvider"
+            ]
+        }
     },
     "config": {
         "sort-packages": true

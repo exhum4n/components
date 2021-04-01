@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\Providers;
 
-class ComponentsProvider extends AbstractProvider
+class ComponentsServiceProvider extends AbstractProvider
 {
     public function register()
     {
