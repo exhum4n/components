@@ -1,0 +1,31 @@
+{
+    "name": "exhum4n/components",
+    "description": "Components SDK",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Stanislav Churilov",
+            "email": "exhum4n.dev@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^5.5.9|^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Exhum4n\\Components\\": "src/"
+        },
+        "classmap": [
+            "Database/Migrations"
+        ],
+        "files": [
+            "src/Helpers/path_helper.php"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
+}
