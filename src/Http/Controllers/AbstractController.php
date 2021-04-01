@@ -14,7 +14,7 @@ abstract class AbstractController extends BaseController
 
     protected $service;
 
-    protected function getCurrentUser(): Authenticatable
+    protected function getCurrentUser(): ?Authenticatable
     {
         return auth()->user();
     }

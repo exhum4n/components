@@ -6,7 +6,7 @@
         {
             "name": "Stanislav Churilov",
             "email": "exhum4n.dev@gmail.com",
-            "role": "Developer"
+            "role": "developer"
         }
     ],
     "require": {
@@ -18,9 +18,6 @@
         },
         "classmap": [
             "Database/Migrations"
-        ],
-        "files": [
-            "src/Helpers/path_helper.php"
         ]
     },
     "extra": {
