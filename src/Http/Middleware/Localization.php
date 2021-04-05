@@ -3,41 +3,38 @@
 namespace Exhum4n\Components\Http\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Foundation\Application;
+use Exhum4n\Components\Exceptions\LocaleNotSupported;
 use Illuminate\Http\Request;
 
 class Localization
 {
     /**
-     * @var Application
-     */
-    protected $app;
-
-    /**
-     * @var Repository
-     */
-    protected $config;
-
-    public function __construct(Application $app, Repository $config)
-    {
-        $this->app = $app;
-        $this->config = $config;
-    }
-
-    /**
      * @param Request $request
      * @param Closure $next
      *
-     * @return mixed
+     * @return Closure
+     *
+     * @throws LocaleNotSupported
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Closure
     {
+        $supportedLocales = config('components.languages');
+
         $locale = $request->header('Content-Language');
+        if (is_null($locale)) {
+            $locale = config()->get('app.locale');
+        }
 
-        $this->config->set('app.country_code', $locale);
-        $this->app->setLocale($locale);
+        if (isset($supportedLocales[$locale]) === false) {
+            throw new LocaleNotSupported($locale);
+        }
 
-        return $next($request);
+        app()->setLocale($locale);
+
+        $response = $next($request);
+
+        $response->headers->set('Content-Language', $locale);
+
+        return $response;
     }
 }

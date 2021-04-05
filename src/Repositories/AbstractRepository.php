@@ -100,7 +100,7 @@ abstract class AbstractRepository
      */
     public function create(array $data): Model
     {
-        $newRecord = new $this->model();
+        $newRecord = app($this->model);
 
         $newRecord->fill($data);
         $newRecord->save();

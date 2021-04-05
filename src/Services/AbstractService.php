@@ -22,7 +22,7 @@ abstract class AbstractService
     {
         $repositoryClass = $this->getRepository();
 
-        $this->repository = new $repositoryClass();
+        $this->repository = app($repositoryClass);
 
         $logName = $this->getLogName();
 

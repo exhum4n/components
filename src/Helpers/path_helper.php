@@ -15,8 +15,8 @@ if (function_exists('migrations_path') === false) {
 
         $componentRoot = dirname($class_info->getFileName(), 2);
 
-        $componentRoot = str_replace('/var/www', '', $componentRoot);
+        $componentRoot = str_replace(base_path(), '', $componentRoot);
 
-        return "{$componentRoot}/Database/Migrations";
+        return $componentRoot . DIRECTORY_SEPARATOR . 'Database' . DIRECTORY_SEPARATOR . 'Migrations';
     }
 }

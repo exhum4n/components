@@ -10,7 +10,9 @@ abstract class Installer extends AbstractCommand
 
     public function handle(): void
     {
-        $this->call('migrate', ['--path' => migrations_path(static::class)]);
+        $this->call('migrate', [
+            '--path' => migrations_path(static::class),
+        ]);
 
         $seeds = $this->seeds;
         foreach ($seeds as $seed) {
