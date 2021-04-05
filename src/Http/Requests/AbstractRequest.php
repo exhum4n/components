@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\Http\Requests;
 
-use Common\Exceptions\ValidationException;
+use Exhum4n\Components\Exceptions\ValidationException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 

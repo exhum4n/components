@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\Providers;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use ReflectionClass;
 
@@ -17,12 +18,15 @@ abstract class AbstractProvider extends ServiceProvider
 
         $apiRoutesPath = "{$componentRoot}/Routes/api.php";
         if (file_exists($apiRoutesPath)) {
-            $this->loadRoutesFrom("{$componentRoot}/Routes/api.php");
+            Route::prefix('api')
+                ->middleware('api')
+                ->group("{$componentRoot}/Routes/api.php");
         }
 
         $webRoutesPath = "{$componentRoot}/Routes/web.php";
         if (file_exists($webRoutesPath)) {
-            $this->loadRoutesFrom("{$componentRoot}/Routes/web.php");
+            Route::middleware('web')
+                ->group("{$componentRoot}/Routes/web.php");
         }
     }
 

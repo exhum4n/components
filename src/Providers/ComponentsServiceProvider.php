@@ -8,6 +8,16 @@ use Exhum4n\Components\Console\ComponentsInstall;
 
 class ComponentsServiceProvider extends AbstractProvider
 {
+    public function boot(): void
+    {
+        parent::boot();
+
+        $path = realpath(__DIR__ . '/../../config/config.php');
+
+        $this->publishes([$path => config_path('components.php')], 'config');
+        $this->mergeConfigFrom($path, 'components');
+    }
+
     public function register()
     {
         $this->registerHelpers();
