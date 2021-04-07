@@ -16,10 +16,7 @@
     "autoload": {
         "psr-4": {
             "Exhum4n\\Components\\": "src/"
-        },
-        "classmap": [
-            "src/Database/Migrations"
-        ]
+        }
     },
     "extra": {
         "laravel": {
