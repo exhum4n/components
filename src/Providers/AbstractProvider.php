@@ -10,6 +10,9 @@ use ReflectionClass;
 
 abstract class AbstractProvider extends ServiceProvider
 {
+    /**
+     * Boot provider.
+     */
     public function boot(): void
     {
         $componentRoot = $this->getComponentRoot();
@@ -30,6 +33,9 @@ abstract class AbstractProvider extends ServiceProvider
         }
     }
 
+    /**
+     * @return string
+     */
     protected function getComponentRoot(): string
     {
         $class_info = new ReflectionClass(static::class);
