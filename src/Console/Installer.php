@@ -6,8 +6,16 @@ namespace Exhum4n\Components\Console;
 
 abstract class Installer extends AbstractCommand
 {
+    /**
+     * Array of package seeders.
+     *
+     * @var array
+     */
     protected $seeds = [];
 
+    /**
+     * Handle console command.
+     */
     public function handle(): void
     {
         $this->call('migrate', [

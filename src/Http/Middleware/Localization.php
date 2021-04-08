@@ -12,11 +12,11 @@ class Localization
      * @param Request $request
      * @param Closure $next
      *
-     * @return Closure
+     * @return mixed
      *
      * @throws LocaleNotSupported
      */
-    public function handle(Request $request, Closure $next): Closure
+    public function handle(Request $request, Closure $next)
     {
         $supportedLocales = config('components.languages');
 
@@ -31,10 +31,6 @@ class Localization
 
         app()->setLocale($locale);
 
-        $response = $next($request);
-
-        $response->headers->set('Content-Language', $locale);
-
-        return $response;
+        return $next($request);
     }
 }

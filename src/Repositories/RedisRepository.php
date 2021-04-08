@@ -6,7 +6,7 @@ namespace Exhum4n\Components\Repositories;
 
 use Illuminate\Support\Facades\Redis;
 
-abstract class RedisRepository
+class RedisRepository
 {
     /**
      * @var string
@@ -34,7 +34,7 @@ abstract class RedisRepository
      */
     public function set(string $key, $value): void
     {
-        $this->redis->set("{$this->prefix}:{$key}", $value, 'EX', $this->expirationTime);
+        $this->redis->set("{$this->prefix}{$key}", $value, 'EX', $this->expirationTime);
     }
 
     /**
@@ -52,7 +52,7 @@ abstract class RedisRepository
      */
     public function setPrefix(string $prefix): void
     {
-        $this->prefix = "{$prefix}";
+        $this->prefix = "{$prefix}:";
     }
 
     /**

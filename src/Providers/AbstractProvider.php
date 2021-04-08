@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpIncludeInspection */
+
 declare(strict_types=1);
 
 namespace Exhum4n\Components\Providers;
@@ -11,11 +13,21 @@ use ReflectionClass;
 abstract class AbstractProvider extends ServiceProvider
 {
     /**
+     * @var string
+     */
+    protected $configPath = '../config/config.php';
+
+    /**
+     * @var string
+     */
+    protected $viewsPath = '../resources/views';
+
+    /**
      * Boot provider.
      */
     public function boot(): void
     {
-        $componentRoot = $this->getComponentRoot();
+        $componentRoot = $this->getPackageRoot();
 
         $this->loadMigrationsFrom("{$componentRoot}/Database/Migrations/");
 
@@ -34,9 +46,79 @@ abstract class AbstractProvider extends ServiceProvider
     }
 
     /**
+     * Register console command.
+     *
+     * @param string $abstract
+     * @param string $className
+     */
+    protected function registerCommand(string $abstract, string $className): void
+    {
+        $this->app->singleton($abstract, function () use ($className) {
+            return new $className();
+        });
+    }
+
+    /**
+     * Register views to global namespace
+     *
+     * @param string $dirName
+     * @param string $namespace
+     */
+    protected function registerViews(string $dirName, string $namespace): void
+    {
+        $componentRoot = $this->getPackageRoot();
+
+        $this->publishes([
+            "{$componentRoot}/{$this->viewsPath}/{$dirName}" => base_path("resources/views/{$namespace}")
+        ], 'views');
+    }
+
+    /**
+     * Register helpers.
+     *
+     * @param string $fileName
+     */
+    protected function registerHelpers(string $fileName)
+    {
+        $componentRoot = $this->getPackageRoot();
+
+        if ($file = "{$componentRoot}/Helpers/{$fileName}") {
+            require $file;
+        }
+    }
+
+    /**
+     * Add ability to publish config
+     *
+     * @param string $name
+     */
+    protected function publishConfig(string $name)
+    {
+        $componentRoot = $this->getPackageRoot();
+
+        $this->publishes([
+            "{$componentRoot}/{$this->configPath}" => config_path($name)
+        ], 'config');
+    }
+
+    /**
+     * Merge package config with app config
+     *
+     * @param string $name
+     */
+    protected function mergeConfigs(string $name)
+    {
+        $componentRoot = $this->getPackageRoot();
+
+        $this->mergeConfigFrom("{$componentRoot}/{$this->configPath}", $name);
+    }
+
+    /**
+     * Return package root path
+     *
      * @return string
      */
-    protected function getComponentRoot(): string
+    private function getPackageRoot(): string
     {
         $class_info = new ReflectionClass(static::class);
 
