@@ -102,6 +102,15 @@ abstract class AbstractProvider extends ServiceProvider
     }
 
     /**
+     * @param string $abstract
+     * @param string $concrete
+     */
+    protected function bind(string $abstract, string $concrete): void
+    {
+        $this->app->bind($abstract, $concrete);
+    }
+
+    /**
      * Merge package config with app config
      *
      * @param string $name

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Exhum4n\Components\Providers;
 
 use Exhum4n\Components\Console\ComponentsInstall;
+use Exhum4n\Components\Exceptions\Handler;
 use Exhum4n\Components\Http\Middleware\Localization;
 
 class ComponentsServiceProvider extends AbstractProvider
@@ -19,6 +20,8 @@ class ComponentsServiceProvider extends AbstractProvider
 
         $this->registerHelpers('path_helper.php');
         $this->publishConfig('components.php');
+
+        $this->replaceExceptionHandler();
     }
 
     /**
@@ -41,5 +44,16 @@ class ComponentsServiceProvider extends AbstractProvider
         $this->registerCommand($name, ComponentsInstall::class);
 
         $this->commands('exhum4n.components.install');
+    }
+
+    /**
+     * Replace default exception handler.
+     */
+    private function replaceExceptionHandler(): void
+    {
+        $this->app->bind(
+            \Illuminate\Contracts\Debug\ExceptionHandler::class,
+            Handler::class
+        );
     }
 }
