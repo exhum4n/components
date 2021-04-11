@@ -8,13 +8,21 @@ use Exhum4n\Components\Providers\ComponentsServiceProvider;
 
 class ComponentsInstall extends Installer
 {
+    /**
+     * {@inheritDoc}
+     */
     public function handle(): void
     {
         parent::handle();
 
-        $this->call('vendor:publish', ['--provider' => ComponentsServiceProvider::class]);
+        $this->call('vendor:publish', [
+            '--provider' => ComponentsServiceProvider::class
+        ]);
     }
 
+    /**
+     * @return string
+     */
     protected function getSignature(): string
     {
         return 'components:install';
