@@ -85,7 +85,7 @@ class Handler extends ExceptionHandler
             return Response::HTTP_FORBIDDEN;
         }
 
-        return $code;
+        return (int) $code;
     }
 
     /**
