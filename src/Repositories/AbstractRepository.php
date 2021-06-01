@@ -129,25 +129,19 @@ abstract class AbstractRepository
 
     /**
      * @param int $id
-     * @param array $attributes
      *
-     * @return Model|Builder
+     * @return int
      */
-    public function updateOrCreateById(int $id, array $attributes = []): Model
-    {
-        $record = $this->getFirst(['id' => $id]);
-        if (is_null($record)) {
-            return $this->create($attributes);
-        }
-
-        return $this->update($record, $attributes);
-    }
-
     public function delete(int $id): int
     {
         return $this->model::destroy($id);
     }
 
+    /**
+     * @param array $where
+     *
+     * @return bool
+     */
     public function exist(array $where): bool
     {
         return $this->model::where($where)->exists();
