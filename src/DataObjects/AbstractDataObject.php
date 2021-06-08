@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\DataObjects;
 
-abstract class AbstractObject
+abstract class AbstractDataObject
 {
     /**
      * @param array $values
