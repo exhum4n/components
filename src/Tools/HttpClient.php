@@ -7,6 +7,7 @@ namespace Exhum4n\Components\Tools;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\TransferStats;
+use Psr\Http\Message\ResponseInterface;
 
 class HttpClient
 {
@@ -15,22 +16,51 @@ class HttpClient
      */
     protected $client;
 
+    /**
+     * @var string
+     */
     protected $method = 'GET';
 
+    /**
+     * @var array
+     */
     protected $headers = [];
 
+    /**
+     * @var string
+     */
     protected $authorization;
 
+    /**
+     * @var array
+     */
     protected $params = [];
 
+    /**
+     * @var ResponseInterface
+     */
     protected $response;
 
+    /**
+     * @var TransferStats
+     */
     protected $stats;
 
+    /**
+     * @var array
+     */
     protected $json = [];
 
+    /**
+     * @var array
+     */
     private $requestOptions = [];
 
+    /**
+     * HttpClient constructor.
+     *
+     * @param string $baseUri
+     */
     public function __construct(string $baseUri = '')
     {
         $this->client = new Client([
@@ -40,11 +70,19 @@ class HttpClient
         ]);
     }
 
+    /**
+     * @return TransferStats
+     */
     public function getStats(): TransferStats
     {
         return $this->stats;
     }
 
+    /**
+     * @param array $params
+     *
+     * @return $this
+     */
     public function setParams(array $params): HttpClient
     {
         $this->params = $params;
@@ -52,6 +90,11 @@ class HttpClient
         return $this;
     }
 
+    /**
+     * @param array $headers
+     *
+     * @return $this
+     */
     public function setHeaders(array $headers = []): HttpClient
     {
         $this->headers = array_merge($this->headers, $headers);
@@ -59,6 +102,11 @@ class HttpClient
         return $this;
     }
 
+    /**
+     * @param array $json
+     *
+     * @return $this
+     */
     public function setJson(array $json): HttpClient
     {
         $this->json = array_merge($this->json, $json);
@@ -66,6 +114,11 @@ class HttpClient
         return $this;
     }
 
+    /**
+     * @param string $uri
+     *
+     * @return array|null
+     */
     public function get(string $uri): ?array
     {
         $this->setMethod('GET');
@@ -73,6 +126,11 @@ class HttpClient
         return $this->go($uri);
     }
 
+    /**
+     * @param string $uri
+     *
+     * @return array|null
+     */
     public function post(string $uri): ?array
     {
         $this->setMethod('POST');
@@ -80,6 +138,12 @@ class HttpClient
         return $this->go($uri);
     }
 
+    /**
+     * @param string $uri
+     * @param bool $debug
+     *
+     * @return array|null
+     */
     protected function go(string $uri = '/', bool $debug = false): ?array
     {
         $defaultOptions = $this->getDefaultRequestOptions($debug);
@@ -112,21 +176,33 @@ class HttpClient
         return $this->getJsonResponse();
     }
 
+    /**
+     * @return int
+     */
     public function getStatusCode(): int
     {
         return $this->response->getStatusCode();
     }
 
+    /**
+     * @return array|null
+     */
     public function getJsonResponse(): ?array
     {
         return json_decode($this->getResponse(), true);
     }
 
+    /**
+     * @return string
+     */
     public function getResponse(): string
     {
         return (string) $this->response->getBody();
     }
 
+    /**
+     * Reset to default state.
+     */
     public function reset(): void
     {
         $this->params = [];
@@ -135,6 +211,11 @@ class HttpClient
         $this->headers = $this->getDefaultHeaders();
     }
 
+    /**
+     * @param string $method
+     *
+     * @return $this
+     */
     public function setMethod(string $method): HttpClient
     {
         $this->method = $method;
@@ -142,6 +223,10 @@ class HttpClient
         return $this;
     }
 
+    /**
+     * @param string $key
+     * @param string $secret
+     */
     public function authorize(string $key, string $secret): void
     {
         $credentials = base64_encode("{$key}:{$secret}");
@@ -149,6 +234,9 @@ class HttpClient
         $this->authorization = "Basic $credentials";
     }
 
+    /**
+     * @return string[]
+     */
     private function getDefaultHeaders(): array
     {
         $headers = [
@@ -163,6 +251,11 @@ class HttpClient
         return $headers;
     }
 
+    /**
+     * @param bool $debug
+     *
+     * @return array
+     */
     private function getDefaultRequestOptions(bool $debug): array
     {
         return [
