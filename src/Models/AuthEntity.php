@@ -24,10 +24,9 @@ use Illuminate\Notifications\Notifiable as NotifiableTrait;
  * @property int status_id
  * @property bool is_verified
  * @property string email
+ * @property string password
  * @property Carbon created_at
  * @property Carbon updated_at
- * @property Status status
- * @property Credentials credentials
  */
 class AuthEntity extends AbstractModel implements Authenticatable, Authorizable, CanResetPassword
 {
@@ -40,22 +39,6 @@ class AuthEntity extends AbstractModel implements Authenticatable, Authorizable,
      * @var bool
      */
     public $timestamps = true;
-
-    /**
-     * @return BelongsTo
-     */
-    public function status(): BelongsTo
-    {
-        return $this->belongsTo(Status::class);
-    }
-
-    /**
-     * @return HasOne
-     */
-    public function credentials(): HasOne
-    {
-        return $this->hasOne(Credentials::class);
-    }
 
     /**
      * @return int
