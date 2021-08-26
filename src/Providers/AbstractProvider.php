@@ -48,15 +48,18 @@ abstract class AbstractProvider extends ServiceProvider
     /**
      * Register console command.
      *
-     * @param string $abstract
+     * @param string $signature
      * @param string $className
      */
-    protected function registerCommand(string $abstract, string $className): void
+    protected function registerCommand(string $signature, string $className): void
     {
-        $this->app->singleton($abstract, function () use ($className) {
+        $this->app->singleton($signature, function () use ($className) {
             return new $className();
         });
+
+        $this->commands($signature);
     }
+
 
     /**
      * Register views to global namespace

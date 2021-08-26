@@ -34,7 +34,7 @@ class RedisRepository
      */
     public function set(string $key, $value): void
     {
-        $this->redis->set("{$this->prefix}{$key}", $value, 'EX', $this->expirationTime);
+        $this->redis->set("{$this->getPrefix()}{$key}", $value, 'EX', $this->expirationTime);
     }
 
     /**
@@ -44,15 +44,22 @@ class RedisRepository
      */
     public function get(string $key): ?string
     {
-        return $this->redis->get("{$this->prefix}{$key}");
+        return $this->redis->get("{$this->getPrefix()}{$key}");
     }
 
     /**
-     * @param string $prefix
+     * @param string $key
+     *
+     * @return int
      */
-    public function setPrefix(string $prefix): void
+    public function ttl(string $key): int
     {
-        $this->prefix = "{$prefix}:";
+        return $this->redis->ttl("{$this->getPrefix()}{$key}");
+    }
+
+    protected function getPrefix(): string
+    {
+        return "$this->prefix:";
     }
 
     /**
@@ -62,7 +69,7 @@ class RedisRepository
      */
     public function delete(string $key)
     {
-        return $this->redis->del("{$this->prefix}{$key}");
+        return $this->redis->del("{$this->getPrefix()}{$key}");
     }
 
     /**
