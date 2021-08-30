@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($this->isValidationException($e)) {
-            $errorBody['message'] = 'Validation failed.';
+            $errorBody['message'] = trans('validation.failed');
             $errorBody['errors'] = json_decode($e->getMessage(), true);
         }
 
