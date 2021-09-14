@@ -29,9 +29,9 @@ class QueueJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    protected $table = 'queue_jobs.queue_jobs';
+    protected string $table = 'queue_jobs.queue_jobs';
 
-    protected $fillable = [
+    protected array $fillable = [
         'queue',
         'attempts',
         'payload',

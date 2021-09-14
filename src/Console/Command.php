@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\Console;
 
-use Illuminate\Console\Command;
+use Illuminate\Console\Command as BaseCommand;
 
-abstract class AbstractCommand extends Command
+abstract class Command extends BaseCommand
 {
     abstract public function handle(): void;
 
     abstract protected function getSignature(): string;
-
-    protected $signature;
 
     public function __construct()
     {

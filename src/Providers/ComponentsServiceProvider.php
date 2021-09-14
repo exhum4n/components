@@ -7,12 +7,10 @@ namespace Exhum4n\Components\Providers;
 use Exhum4n\Components\Console\ComponentsInstall;
 use Exhum4n\Components\Exceptions\Handler;
 use Exhum4n\Components\Http\Middleware\Localization;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 
-class ComponentsServiceProvider extends AbstractProvider
+class ComponentsServiceProvider extends ServiceProvider
 {
-    /**
-     * {@inheritDoc}
-     */
     public function register(): void
     {
         $this->registerInstallCommands();
@@ -24,9 +22,6 @@ class ComponentsServiceProvider extends AbstractProvider
         $this->replaceExceptionHandler();
     }
 
-    /**
-     * Register localization middleware.
-     */
     private function registerLocalizationMiddleware(): void
     {
         $router = $this->app['router'];
@@ -34,25 +29,19 @@ class ComponentsServiceProvider extends AbstractProvider
         $router->pushMiddlewareToGroup('api', Localization::class);
     }
 
-    /**
-     * Register installation command
-     */
     private function registerInstallCommands(): void
     {
         $name = 'exhum4n.components.install';
 
         $this->registerCommand($name, ComponentsInstall::class);
 
-        $this->commands('exhum4n.components.install');
+        $this->commands($name);
     }
 
-    /**
-     * Replace default exception handler.
-     */
     private function replaceExceptionHandler(): void
     {
         $this->app->bind(
-            \Illuminate\Contracts\Debug\ExceptionHandler::class,
+            ExceptionHandler::class,
             Handler::class
         );
     }

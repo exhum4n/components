@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\Exceptions;
 
-use Throwable;
 use Exception;
 
 class InstallationException extends Exception
 {
-    public function __construct($message = "", $code = 0, Throwable $previous = null)
+    public function __construct($message = "Can not install module.")
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, 500);
     }
 }

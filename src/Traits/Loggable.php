@@ -9,29 +9,20 @@ use Monolog\Logger;
 
 trait Loggable
 {
-    /**
-     * @var Logger
-     */
-    public $logger;
+    public Logger $logger;
 
-    /**
-     * @var string
-     */
-    protected $channelName = 'app';
-
-    /**
-     * @param string|null $channelName
-     */
-    protected function initLogger(?string $channelName = null): void
+    protected function initLogger(): void
     {
-        $channelName = $channelName ?: $this->channelName;
+        $logName = $this->getLogName();
 
-        $this->logger = new Logger($channelName);
+        $this->logger = new Logger($logName);
 
-        $logPath = "logs/{$channelName}.log";
+        $logPath = "logs/$logName.log";
 
         $streamHandler = new StreamHandler(storage_path($logPath));
 
         $this->logger->pushHandler($streamHandler);
     }
+
+    abstract protected function getLogName(): string;
 }

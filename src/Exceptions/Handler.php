@@ -6,18 +6,12 @@ namespace Exhum4n\Components\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * A list of the inputs that are never flashed for validation exceptions.
-     *
-     * @var array
-     */
     protected $dontFlash = [
         'password',
         'password_confirmation',
@@ -33,12 +27,6 @@ class Handler extends ExceptionHandler
         parent::report($e);
     }
 
-    /**
-     * @param Request $request
-     * @param Throwable $e
-     *
-     * @return JsonResponse
-     */
     public function render($request, Throwable $e): JsonResponse
     {
         $exceptionCode = $this->getExceptionCode($e);
@@ -65,11 +53,6 @@ class Handler extends ExceptionHandler
         return response()->json($errorBody, $exceptionCode);
     }
 
-    /**
-     * @param Throwable $exception
-     *
-     * @return int
-     */
     protected function getExceptionCode(Throwable $exception): int
     {
         $code = $exception->getCode();
@@ -81,11 +64,6 @@ class Handler extends ExceptionHandler
         return intval($code);
     }
 
-    /**
-     * @param Throwable $exception
-     *
-     * @return bool
-     */
     protected function isValidationException(Throwable $exception): bool
     {
         return $exception instanceof ValidationException;

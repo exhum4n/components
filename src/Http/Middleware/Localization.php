@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Exhum4n\Components\Http\Middleware;
 
 use Closure;
@@ -9,14 +11,9 @@ use Illuminate\Http\Request;
 class Localization
 {
     /**
-     * @param Request $request
-     * @param Closure $next
-     *
-     * @return mixed
-     *
      * @throws LocaleNotSupported
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         $supportedLocales = config('components.languages');
 

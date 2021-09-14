@@ -1,22 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Exhum4n\Components\Database\Seeds;
 
-use Exhum4n\Components\Repositories\AbstractRepository;
-use Illuminate\Database\Seeder;
+use Exhum4n\Components\Repositories\EloquentRepository;
+use Illuminate\Database\Seeder as BaseSeeder;
 
-abstract class AbstractSeeder extends Seeder
+abstract class Seeder extends BaseSeeder
 {
-    abstract protected function getRecords(): array;
+    protected EloquentRepository $repository;
 
-    abstract protected function getRepository(): string;
-
-    /**
-     * @var AbstractRepository
-     */
-    protected $repository;
-
-    protected $records = [];
+    protected array $records = [];
 
     public function __construct()
     {
@@ -30,10 +25,14 @@ abstract class AbstractSeeder extends Seeder
     {
         $seedClass = class_basename(static::class);
 
-        $this->command->warn("Seeding: {$seedClass}");
+        $this->command->warn("Seeding: $seedClass");
 
         foreach ($this->records as $record) {
             $this->repository->firstOrCreate($record);
         }
     }
+
+    abstract protected function getRecords(): array;
+
+    abstract protected function getRepository(): string;
 }

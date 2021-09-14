@@ -17,8 +17,5 @@ abstract class AbstractJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    /**
-     * @var array
-     */
-    protected $eventsAfterProcessing = [];
+    protected array $eventsAfterProcessing = [];
 }

@@ -6,9 +6,9 @@ namespace Exhum4n\Components\Console;
 
 use Illuminate\Support\Facades\DB;
 
-abstract class Uninstaller extends AbstractCommand
+abstract class Uninstaller extends Command
 {
-    protected $dropSchema = true;
+    protected bool $dropSchema = true;
 
     public function handle(): void
     {

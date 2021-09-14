@@ -6,18 +6,10 @@ namespace Exhum4n\Components\Console;
 
 use Illuminate\Support\Str;
 
-abstract class Installer extends AbstractCommand
+abstract class Installer extends Command
 {
-    /**
-     * Array of package seeders.
-     *
-     * @var array
-     */
-    protected $seeds = [];
+    protected array $seeds = [];
 
-    /**
-     * Handle console command.
-     */
     public function handle(): void
     {
         $this->call('migrate', [
@@ -30,9 +22,6 @@ abstract class Installer extends AbstractCommand
         }
     }
 
-    /**
-     * @return string
-     */
     protected function getEnvPath(): string
     {
         if (method_exists($this->laravel, 'environmentFilePath')) {
@@ -42,22 +31,11 @@ abstract class Installer extends AbstractCommand
         return $this->laravel->basePath('.env');
     }
 
-    /**
-     * @param string $envPath
-     * @param string $variable
-     *
-     * @return bool
-     */
     protected function isEnvVariableExists(string $envPath, string $variable): bool
     {
         return Str::contains(file_get_contents($envPath), $variable);
     }
 
-    /**
-     * @param string $envPath
-     * @param string $variable
-     * @param string|null $value
-     */
     protected function addEnvVariable(string $envPath, string $variable, ?string $value = null): void
     {
         file_put_contents($envPath, PHP_EOL . "$variable=$value", FILE_APPEND);

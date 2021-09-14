@@ -6,9 +6,9 @@ namespace Exhum4n\Components\Http\Requests;
 
 use Exhum4n\Components\Exceptions\ValidationException;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Foundation\Http\FormRequest as BaseFormRequest;
 
-abstract class AbstractRequest extends FormRequest
+abstract class FormRequest extends BaseFormRequest
 {
     abstract public function rules(): array;
 
@@ -18,8 +18,6 @@ abstract class AbstractRequest extends FormRequest
     }
 
     /**
-     * @param Validator $validator
-     *
      * @throws ValidationException
      */
     protected function failedValidation(Validator $validator): void

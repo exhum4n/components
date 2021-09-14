@@ -9,22 +9,13 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 abstract class PaginatorPresenter extends SimplePresenter
 {
-    /**
-     * @var LengthAwarePaginator
-     */
-    protected $items;
+    protected LengthAwarePaginator $items;
 
-    /**
-     * @param LengthAwarePaginator $items
-     */
     public function __construct(LengthAwarePaginator $items)
     {
         $this->items = $items;
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function present(): JsonResponse
     {
         $presentationData = array_merge($this->getPaginator(), $this->getItems());
@@ -32,9 +23,6 @@ abstract class PaginatorPresenter extends SimplePresenter
         return response()->json($presentationData, $this->code);
     }
 
-    /**
-     * @return array
-     */
     private function getItems(): array
     {
         return [
@@ -42,9 +30,6 @@ abstract class PaginatorPresenter extends SimplePresenter
         ];
     }
 
-    /**
-     * @return array
-     */
     private function getPaginator(): array
     {
         return [

@@ -1,60 +1,43 @@
 <?php
 
+/** @noinspection PhpUndefinedMethodInspection */
+/** @noinspection PhpPossiblePolymorphicInvocationInspection */
+
 declare(strict_types=1);
 
 namespace Exhum4n\Components\Repositories;
 
+use Illuminate\Redis\Connections\Connection;
 use Illuminate\Support\Facades\Redis;
 
 class RedisRepository
 {
-    /**
-     * @var string
-     */
-    protected $prefix;
+    protected string $prefix;
 
-    /**
-     * @var Redis
-     */
-    protected $redis;
+    protected Connection $redis;
 
-    /**
-     * @var int
-     */
-    protected $expirationTime = 86400;
+    protected int $expirationTime = 86400;
 
-    public function __construct()
+    public function __construct(string $prefix = '')
     {
         $this->redis = Redis::connection();
+
+        $this->prefix = $prefix;
     }
 
-    /**
-     * @param string $key
-     * @param $value
-     */
     public function set(string $key, $value): void
     {
-        $this->redis->set("{$this->getPrefix()}{$key}", $value, 'EX', $this->expirationTime);
+        $this->redis->set("$this->prefix$key", $value, 'EX', $this->expirationTime);
     }
 
-    /**
-     * @param string $key
-     *
-     * @return string|null
-     */
     public function get(string $key): ?string
     {
-        return $this->redis->get("{$this->getPrefix()}{$key}");
+        return $this->redis->get("$this->prefix$key");
     }
 
-    /**
-     * @param string $key
-     *
-     * @return int
-     */
     public function ttl(string $key): int
     {
-        return $this->redis->ttl("{$this->getPrefix()}{$key}");
+        return $this->redis->ttl("$this->prefix$key");
     }
 
     protected function getPrefix(): string
@@ -62,30 +45,16 @@ class RedisRepository
         return "$this->prefix:";
     }
 
-    /**
-     * @param string $key
-     *
-     * @return mixed
-     */
-    public function delete(string $key)
+    public function delete(string $key): int
     {
-        return $this->redis->del("{$this->getPrefix()}{$key}");
+        return $this->redis->del("$this->prefix$key");
     }
 
-    /**
-     * @param string $key
-     * @param string $value
-     *
-     * @return bool
-     */
     public function isExists(string $key, string $value): bool
     {
         return $this->get($key) === $value;
     }
 
-    /**
-     * @param int $seconds
-     */
     public function setExpirationTime(int $seconds): void
     {
         $this->expirationTime = $seconds;

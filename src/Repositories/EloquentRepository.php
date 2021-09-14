@@ -4,101 +4,64 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\Repositories;
 
-use Exhum4n\Components\Models\AbstractModel;
+use Exhum4n\Components\Models\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-abstract class AbstractRepository
+abstract class EloquentRepository
 {
-    /**
-     * @var AbstractModel
-     */
-    protected $model;
+    protected string|Model $model;
 
-    /**
-     * EloquentRepository constructor.
-     */
     public function __construct()
     {
         $this->model = $this->getModel();
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return class_basename(static::class);
     }
 
-    /**
-     * @return Builder
-     */
     public function getQuery(): Builder
     {
         return $this->model::query();
     }
 
-    /**
-     * @param array $where
-     *
-     * @return Builder|Model|object|null
-     */
-    public function getFirst(array $where)
+    public function getFirst(array $where): mixed
     {
         return $this->model::where($where)->first();
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Builder|Model|object|null
-     */
-    public function getById(int $id)
+    public function getById(int $id): mixed
     {
         return $this->getFirst(['id' => $id]);
     }
 
-    /**
-     * @param array $where
-     *
-     * @return Collection|null
-     */
+    public function getByName(string $name): mixed
+    {
+        return $this->getFirst(['name' => $name]);
+    }
+
     public function get(array $where): ?Collection
     {
         return $this->model::where($where)->get();
     }
 
-    /**
-     * @return Collection|null
-     */
     public function getAll(): ?Collection
     {
         return $this->model::all();
     }
 
-    /**
-     * @param int|null $perPage
-     * @param array|null $filters
-     *
-     * @return LengthAwarePaginator
-     */
     public function getWithPagination(?int $perPage = null, ?array $filters = null): LengthAwarePaginator
     {
         return $this->model::where($filters)->paginate($perPage);
     }
 
-    /**
-     * @param array $data
-     *
-     * @return Model
-     */
-    public function create(array $data): Model
+    public function create(array $data): mixed
     {
         $newRecord = app($this->model);
 
@@ -108,13 +71,7 @@ abstract class AbstractRepository
         return $newRecord;
     }
 
-    /**
-     * @param Model $model
-     * @param array $data
-     *
-     * @return Model
-     */
-    public function update(Model $model, array $data): Model
+    public function update(Model $model, array $data): mixed
     {
         if (get_class($model) !== $this->model) {
             throw new ModelNotFoundException('Wrong model class');
@@ -127,42 +84,22 @@ abstract class AbstractRepository
         return $model;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return int
-     */
     public function delete(int $id): int
     {
         return $this->model::destroy($id);
     }
 
-    /**
-     * @param array $where
-     *
-     * @return bool
-     */
     public function exist(array $where): bool
     {
         return $this->model::where($where)->exists();
     }
 
-    /**
-     * @param array $where
-     *
-     * @return Model
-     */
     public function firstOrCreate(array $where): Model
     {
         return $this->model::firstOrCreate($where);
     }
 
-    /**
-     * @param callable $transaction
-     *
-     * @return mixed
-     */
-    public function transactionWrapper(callable $transaction)
+    public function transactionWrapper(callable $transaction): mixed
     {
         $this->beginTransaction();
 

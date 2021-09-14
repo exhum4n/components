@@ -11,56 +11,24 @@ use Psr\Http\Message\ResponseInterface;
 
 class HttpClient
 {
-    /**
-     * @var Client
-     */
-    protected $client;
+    protected Client $client;
 
-    /**
-     * @var string
-     */
-    protected $method = 'GET';
+    protected string $method = 'GET';
 
-    /**
-     * @var array
-     */
-    protected $headers = [];
+    protected array $headers = [];
 
-    /**
-     * @var string
-     */
-    protected $authorization;
+    protected string $authorization;
 
-    /**
-     * @var array
-     */
-    protected $params = [];
+    protected array $params = [];
 
-    /**
-     * @var ResponseInterface
-     */
-    protected $response;
+    protected ResponseInterface $response;
 
-    /**
-     * @var TransferStats
-     */
-    protected $stats;
+    protected TransferStats $stats;
 
-    /**
-     * @var array
-     */
-    protected $json = [];
+    protected array $json = [];
 
-    /**
-     * @var array
-     */
-    private $requestOptions = [];
+    private array $requestOptions = [];
 
-    /**
-     * HttpClient constructor.
-     *
-     * @param string $baseUri
-     */
     public function __construct(string $baseUri = '')
     {
         $this->client = new Client([
@@ -70,19 +38,11 @@ class HttpClient
         ]);
     }
 
-    /**
-     * @return TransferStats
-     */
     public function getStats(): TransferStats
     {
         return $this->stats;
     }
 
-    /**
-     * @param array $params
-     *
-     * @return $this
-     */
     public function setParams(array $params): HttpClient
     {
         $this->params = $params;
@@ -90,11 +50,6 @@ class HttpClient
         return $this;
     }
 
-    /**
-     * @param array $headers
-     *
-     * @return $this
-     */
     public function setHeaders(array $headers = []): HttpClient
     {
         $this->headers = array_merge($this->headers, $headers);
@@ -102,11 +57,6 @@ class HttpClient
         return $this;
     }
 
-    /**
-     * @param array $json
-     *
-     * @return $this
-     */
     public function setJson(array $json): HttpClient
     {
         $this->json = array_merge($this->json, $json);
@@ -114,11 +64,6 @@ class HttpClient
         return $this;
     }
 
-    /**
-     * @param string $uri
-     *
-     * @return array|null
-     */
     public function get(string $uri): ?array
     {
         $this->setMethod('GET');
@@ -126,11 +71,6 @@ class HttpClient
         return $this->go($uri);
     }
 
-    /**
-     * @param string $uri
-     *
-     * @return array|null
-     */
     public function post(string $uri): ?array
     {
         $this->setMethod('POST');
@@ -139,10 +79,7 @@ class HttpClient
     }
 
     /**
-     * @param string $uri
-     * @param bool $debug
-     *
-     * @return array|null
+     * @noinspection PhpPossiblePolymorphicInvocationInspection
      */
     protected function go(string $uri = '/', bool $debug = false): ?array
     {
@@ -176,33 +113,21 @@ class HttpClient
         return $this->getJsonResponse();
     }
 
-    /**
-     * @return int
-     */
     public function getStatusCode(): int
     {
         return $this->response->getStatusCode();
     }
 
-    /**
-     * @return array|null
-     */
     public function getJsonResponse(): ?array
     {
         return json_decode($this->getResponse(), true);
     }
 
-    /**
-     * @return string
-     */
     public function getResponse(): string
     {
         return (string) $this->response->getBody();
     }
 
-    /**
-     * Reset to default state.
-     */
     public function reset(): void
     {
         $this->params = [];
@@ -211,11 +136,6 @@ class HttpClient
         $this->headers = $this->getDefaultHeaders();
     }
 
-    /**
-     * @param string $method
-     *
-     * @return $this
-     */
     public function setMethod(string $method): HttpClient
     {
         $this->method = $method;
@@ -223,20 +143,13 @@ class HttpClient
         return $this;
     }
 
-    /**
-     * @param string $key
-     * @param string $secret
-     */
     public function authorize(string $key, string $secret): void
     {
-        $credentials = base64_encode("{$key}:{$secret}");
+        $credentials = base64_encode("$key:$secret");
 
         $this->authorization = "Basic $credentials";
     }
 
-    /**
-     * @return string[]
-     */
     private function getDefaultHeaders(): array
     {
         $headers = [
@@ -251,11 +164,6 @@ class HttpClient
         return $headers;
     }
 
-    /**
-     * @param bool $debug
-     *
-     * @return array
-     */
     private function getDefaultRequestOptions(bool $debug): array
     {
         return [

@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\DataObjects;
 
-abstract class AbstractDataObject
+abstract class DataObject
 {
-    /**
-     * @param array $values
-     */
-    public function __construct($values = [])
+    public function __construct(array $values = [])
     {
         foreach ($values as $key => $value) {
             $key = lcfirst($key);
@@ -20,9 +17,6 @@ abstract class AbstractDataObject
         }
     }
 
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return get_object_vars($this);

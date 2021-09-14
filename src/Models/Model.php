@@ -6,7 +6,7 @@ namespace Exhum4n\Components\Models;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as BaseModel;
 
 /**
  * @method static Builder where($column, $operator = null, $value = null, $boolean = 'and')
@@ -16,10 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static LengthAwarePaginator paginate(?int $perPage = null)
  * @method Builder update(array $values)
  */
-abstract class AbstractModel extends Model
+abstract class Model extends BaseModel
 {
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 }

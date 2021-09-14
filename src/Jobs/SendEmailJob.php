@@ -9,28 +9,18 @@ use Illuminate\Support\Facades\Mail;
 
 class SendEmailJob extends AbstractJob
 {
-    /**
-     * @var string
-     */
-    protected $mailable;
+    protected Mailable $mail;
 
-    /**
-     * @var string
-     */
-    protected $email;
+    protected string $email;
 
-    /**
-     * @param string $email
-     * @param Mailable $mailable
-     */
-    public function __construct(string $email, Mailable $mailable)
+    public function __construct(string $email, Mailable $mail)
     {
         $this->email = $email;
-        $this->mailable = $mailable;
+        $this->mail = $mail;
     }
 
     public function handle(): void
     {
-        Mail::to($this->email)->send($this->mailable);
+        Mail::to($this->email)->send($this->mail);
     }
 }

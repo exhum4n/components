@@ -8,9 +8,6 @@ use Exhum4n\Components\Providers\ComponentsServiceProvider;
 
 class ComponentsInstall extends Installer
 {
-    /**
-     * {@inheritDoc}
-     */
     public function handle(): void
     {
         parent::handle();
@@ -20,9 +17,6 @@ class ComponentsInstall extends Installer
         ]);
     }
 
-    /**
-     * @return string
-     */
     protected function getSignature(): string
     {
         return 'components:install';
