@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\Exceptions;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +31,9 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e): JsonResponse
     {
         $exceptionCode = $this->getExceptionCode($e);
+        if ($e instanceof QueryException) {
+            $exceptionCode = 400;
+        }
 
         $errorBody = [
             'message' => $e->getMessage(),
