@@ -8,7 +8,7 @@ use Exhum4n\Components\Repositories\RedisRepository;
 
 trait UsesRedis
 {
-    protected RedisRepository $redis;
+    protected RedisRepository $cache;
 
     abstract protected function getRedisRepository(): string;
 }

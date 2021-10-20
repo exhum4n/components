@@ -13,9 +13,9 @@ use Exhum4n\Components\Traits\UsesRedis;
 
 abstract class Service
 {
-    protected EloquentRepository $repository;
+    public EloquentRepository $repository;
 
-    protected RedisRepository $redis;
+    protected RedisRepository $cache;
 
     public function __construct()
     {
@@ -37,6 +37,6 @@ abstract class Service
 
     private function initializeRedis(): void
     {
-        $this->redis = app(static::getRedisRepository());
+        $this->cache = app(static::getRedisRepository());
     }
 }
