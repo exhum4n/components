@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^7.4",
         "laravel/framework": "^8.0.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "predis/predis": "^1.1",
