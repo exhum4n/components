@@ -24,7 +24,11 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Exhum4n\\Components\\Providers\\ComponentsServiceProvider"
+                "Exhum4n\\Components\\Providers\\ComponentsServiceProvider",
+                "Exhum4n\\Components\\Providers\\MigrationServiceProvider"
+            ],
+            "dont-discover": [
+                "Illuminate\\Database\\MigrationServiceProvider"
             ]
         }
     },

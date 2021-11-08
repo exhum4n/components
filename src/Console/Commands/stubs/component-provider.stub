@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ namespace }};
+
+use Exhum4n\Components\Providers\ServiceProvider;
+
+class {{ class }} extends ServiceProvider
+{
+    public function register(): void
+    {
+        //
+    }
+
+    public function boot(): void
+    {
+        //
+    }
+}
