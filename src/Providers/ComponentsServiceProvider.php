@@ -14,6 +14,7 @@ class ComponentsServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerInstallCommands();
+        $this->registerCmakeCommands();
         $this->registerLocalizationMiddleware();
 
         $this->registerHelpers('path_helper.php');
@@ -36,6 +37,13 @@ class ComponentsServiceProvider extends ServiceProvider
         $this->registerCommand($name, ComponentsInstall::class);
 
         $this->commands($name);
+    }
+
+    private function registerCmakeCommands(): void
+    {
+        $this->commands([
+            \Exhum4n\Components\Console\Commands\TestCmakeCommand::class
+        ]);
     }
 
     private function replaceExceptionHandler(): void
