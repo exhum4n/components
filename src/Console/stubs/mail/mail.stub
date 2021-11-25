@@ -11,9 +11,6 @@ class {{ class }} extends Mail
         parent::__construct();
     }
 
-    /**
-     * Build the message.
-     */
     public function build(): self
     {
         return $this->view('view.name');

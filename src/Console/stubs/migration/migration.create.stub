@@ -2,13 +2,12 @@
 
 use Exhum4n\Components\Database\Migrations\PostgresMigration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends PostgresMigration
 {
     protected function getSchema(): string
     {
-        return '';
+        return '{{ schema }}';
     }
 
     protected function getTable(): string
@@ -18,7 +17,7 @@ return new class extends PostgresMigration
 
     protected function getBlueprint(): Closure
     {
-        return function (Blueprint $table): void {
+        return static function (Blueprint $table): void {
             $table->id();
             $table->timestamps();
         };

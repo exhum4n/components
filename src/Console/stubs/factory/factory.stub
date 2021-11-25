@@ -1,17 +1,12 @@
 <?php
 
-namespace {{ factoryNamespace }};
+namespace {{ namespace }};
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use {{ namespacedModel }};
+use {{ modelNamespace }};
 
-class {{ factory }}Factory extends Factory
+class {{ class }} extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = {{ model }}::class;
 
     public function definition(): array

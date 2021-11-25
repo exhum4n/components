@@ -42,6 +42,29 @@ class ComponentsServiceProvider extends ServiceProvider
     private function registerCmakeCommands(): void
     {
         $this->commands([
+            \Exhum4n\Components\Console\Commands\CastCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\ChannelCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\ConsoleCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\ControllerCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\EntityCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\EventCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\ExceptionCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\FactoryCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\JobCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\ListenerCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\MailCmakeCommands::class,
+            \Exhum4n\Components\Console\Commands\MiddlewareCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\MigrationCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\ModelCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\NotificationCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\ObserverCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\PolicyCmakeClass::class,
+            \Exhum4n\Components\Console\Commands\ProviderCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\RepositoryCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\RequestCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\ResourceCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\RuleCmakeCommand::class,
+            \Exhum4n\Components\Console\Commands\SeederCmakeCommand::class,
             \Exhum4n\Components\Console\Commands\TestCmakeCommand::class
         ]);
     }

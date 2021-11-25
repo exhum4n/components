@@ -6,6 +6,7 @@ namespace Exhum4n\Components\Console;
 
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\InflectorFactory;
+use LogicException;
 
 class NamespaceBuilder
 {
@@ -18,66 +19,11 @@ class NamespaceBuilder
 
     public function __construct(string $componentName, string $relativeNamespace, string $className)
     {
+        $this->component = $componentName;
+        $this->relativeNamespace = $relativeNamespace;
+        $this->className = $className;
+
         $this->inflector = InflectorFactory::create()->build();
-
-        $this->setComponent($componentName);
-        $this->setRelativeNamespace($relativeNamespace);
-        $this->setClassName($className);
-    }
-
-    public function getClassNamespace(): string
-    {
-        return $this->createNamespace($this->getRelativeNamespace(), $this->getClassName());
-    }
-
-    public function getClassPath(bool $returnRelativePath = false): string
-    {
-        $relativePath = $this->convertNamespaceToFilePath($this->getClassNamespace());
-
-        if ($returnRelativePath) {
-            return $relativePath;
-        }
-
-        return base_path($relativePath);
-    }
-
-    public function createNamespace(string $relativeNamespace, string $className): string
-    {
-        $path = [
-            $this->getRootNamespace(),
-            $this->getComponent(),
-            $relativeNamespace,
-            $className
-        ];
-
-        return implode('\\', $path);
-    }
-
-    public function createClassPath(string $relativeNamespace, string $className, bool $returnRelativePath = false): string
-    {
-        $namespace = $this->createNamespace($relativeNamespace, $className);
-        $relativePath = $this->convertNamespaceToFilePath($namespace);
-
-        if ($returnRelativePath) {
-            return $relativePath;
-        }
-
-        return base_path($relativePath);
-    }
-
-    public function convertNamespaceToFilePath(string $namespace): string
-    {
-        $search = [
-            '\\',
-            $this->getRootNamespace(),
-        ];
-
-        $replace = [
-            DIRECTORY_SEPARATOR,
-            strtolower($this->getRootNamespace())
-        ];
-
-        return str_replace($search, $replace, $namespace) . '.php';
     }
 
     public function getRootNamespace(): string
@@ -90,20 +36,9 @@ class NamespaceBuilder
         return $this->component;
     }
 
-    protected function setComponent(string $component): void
-    {
-        $this->component = $this->inflector->pluralize($component);
-        $this->component = $this->inflector->classify($this->component);
-    }
-
     public function getRelativeNamespace(): string
     {
         return $this->relativeNamespace;
-    }
-
-    protected function setRelativeNamespace(string $relativeNamespace): void
-    {
-        $this->relativeNamespace = $this->inflector->classify($relativeNamespace);
     }
 
     public function getClassName(): string
@@ -111,9 +46,77 @@ class NamespaceBuilder
         return $this->className;
     }
 
-    protected function setClassName(string $className): void
+    public function getNamespace(): string
     {
-        $this->className = $this->inflector->singularize($className);
-        $this->className = $this->inflector->classify($this->className);
+        return $this->createNamespace($this->relativeNamespace);
+    }
+
+    public function createNamespace(string $relativeNamespace): string
+    {
+        $path = [
+            static::ROOT_NAMESPACE,
+            $this->component,
+            $relativeNamespace
+        ];
+
+        return implode('\\', $path);
+    }
+
+    public function getNamespaceAndClassName(): string
+    {
+        return "{$this->getNamespace()}\\$this->className";
+    }
+
+    public function getClassPath(bool $relative = false): string
+    {
+        $relativePath = $this->convertNamespaceToFilePath();
+        if ($relative) {
+            return $relativePath;
+        }
+
+        return base_path($relativePath);
+    }
+
+    protected function convertNamespaceToFilePath(): string
+    {
+        $search = [
+            '\\',
+            $this->getRootNamespace(),
+        ];
+
+        $replace = [
+            DIRECTORY_SEPARATOR,
+            strtolower($this->getRootNamespace())
+        ];
+
+        $replacedNamespace = str_replace($search, $replace, $this->getNamespace());
+
+        return $replacedNamespace . DIRECTORY_SEPARATOR . "$this->className.php";
+    }
+
+    public function getMigrationPath(bool $relative = false): string
+    {
+        $pathWithoutFileName = preg_replace('~^(.*)/.*$~', '$1', $this->getClassPath($relative));
+        $migrationPrefix = date('Y_m_d_His');
+        $migrationName = $this->inflector->tableize($this->getClassName());
+        $fileName = "{$migrationPrefix}_$migrationName.php";
+
+        return $pathWithoutFileName . DIRECTORY_SEPARATOR . $fileName;
+    }
+
+    public function getNamespacedUserProviderModel(?string $guard = null)
+    {
+        $defaultGuard = ($guard) ?: config('auth.defaults.guard');
+        $provider = config("auth.guards.$defaultGuard.provider");
+        if ($provider === null) {
+            throw new LogicException("The [$defaultGuard] guard is not defined in your \"auth\" configuration file.");
+        }
+
+        return config("auth.providers.$provider.model");
+    }
+
+    public function getClassFromNamespace(string $namespace): string
+    {
+        return preg_replace('~^.*\\\(.*)$~', '$1', $namespace);
     }
 }

@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Exhum4n\Components\Console;
-
 
 class ClassBuilder
 {
@@ -33,17 +31,18 @@ class ClassBuilder
     protected function sortImportedNamespaces(string $stub): void
     {
         $stubHasNamespaces = preg_match('/(?P<imports>(?:use [^;]+;$\n?)+)/m', $stub, $match);
-
-        if ($stubHasNamespaces) {
-            $defaultNamespaceBlock = trim($match['imports']);
-
-            $namespaces = explode("\n", $defaultNamespaceBlock);
-
-            sort($namespaces);
-
-            $newSortedNamespaceBlock = implode("\n", $namespaces);
-
-            $this->stub =  str_replace($defaultNamespaceBlock, $newSortedNamespaceBlock, $stub);
+        if (!$stubHasNamespaces) {
+            return;
         }
+
+        $defaultNamespaceBlock = trim($match['imports']);
+
+        $namespaces = explode("\n", $defaultNamespaceBlock);
+
+        sort($namespaces);
+
+        $newSortedNamespaceBlock = implode("\n", $namespaces);
+
+        $this->stub = str_replace($defaultNamespaceBlock, $newSortedNamespaceBlock, $stub);
     }
 }

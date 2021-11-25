@@ -1,45 +1,37 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Exhum4n\Components\Console\Commands;
 
 use Exhum4n\Components\Console\CmakeCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-class TestCmakeCommand extends CmakeCommand
+class ModelCmakeCommand extends CmakeCommand
 {
     /**
      * @var string
      */
-    protected $name = 'cmake:test';
+    protected $name = 'cmake:model';
 
     /**
      * @var string
      */
-    protected $description = 'Create a new test class';
+    protected $description = 'Create a new Eloquent model class';
 
     protected function getClassType(): string
     {
-        return 'Test';
+        return 'Model';
     }
 
     protected function getRelativeNamespace(): string
     {
-        if ($this->option('unit')) {
-            return 'Tests\Unit';
-        }
-
-        return 'Tests\Feature';
+        return 'Models';
     }
 
     protected function getStub(): string
     {
-        $suffix = $this->option('unit') ? '.unit.stub' : '.stub';
-
-        return $this->option('pest')
-            ? $this->resolveStubPath('/stubs/test/pest' . $suffix)
-            : $this->resolveStubPath('/stubs/test/test' . $suffix);
+        return $this->option('pivot')
+            ? $this->resolveStubPath('/stubs/model/model.pivot.stub')
+            : $this->resolveStubPath('/stubs/model/model.stub');
     }
 
     protected function getReplaces(): array
@@ -54,17 +46,11 @@ class TestCmakeCommand extends CmakeCommand
     {
         return [
             [
-                'unit',
-                'u',
-                InputOption::VALUE_NONE,
-                'Create a unit test.'
-            ],
-            [
-                'pest',
+                'pivot',
                 'p',
                 InputOption::VALUE_NONE,
-                'Create a Pest test.'
-            ],
+                'Indicates if the generated model should be a custom intermediate table model'
+            ]
         ];
     }
 }
