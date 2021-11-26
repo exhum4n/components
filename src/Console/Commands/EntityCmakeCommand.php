@@ -12,19 +12,29 @@ use Throwable;
 
 class EntityCmakeCommand extends Command
 {
+    protected const ARG_NAME = 'name';
+    protected const ARG_COMPONENT = 'component';
+    protected const OPT_MODEL = '--model';
+    protected const OPT_FORCE = '--force';
+    protected const SELF_OPT_FORCE = 'force';
+    protected const TYPE_MODEL = 'model';
+
+    /**
+     * @var string
+     */
     protected $name = 'cmake:entity';
+
+    /**
+     * @var string
+     */
     protected $description = 'Create a new entity';
 
     protected Inflector $inflector;
-    private string $componentNameSingular;
-    private string $componentNamePlural;
-
-    private string $componentPath;
-
+    protected string $componentNameSingular;
+    protected string $componentNamePlural;
+    protected string $componentPath;
     protected ConsoleOutput $consoleOutput;
-
-    private string $modelName;
-
+    protected string $modelName;
 
     public function __construct()
     {
@@ -37,6 +47,7 @@ class EntityCmakeCommand extends Command
     public function handle(): void
     {
         $this->setComponentName();
+        $this->setComponentPath();
         $this->makeComponentDir();
 
         $this->createModel();
@@ -49,8 +60,7 @@ class EntityCmakeCommand extends Command
         $this->info("\nComponent created successfully.");
     }
 
-
-    private function setComponentName(): void
+    protected function setComponentName(): void
     {
         $answer = $this->ask('Set the name of the component dir');
         if (empty($answer)) {
@@ -64,21 +74,21 @@ class EntityCmakeCommand extends Command
         $this->componentNameSingular = $this->inflector->classify($this->componentNameSingular);
         $this->componentNamePlural = $this->inflector->pluralize($answer);
         $this->componentNamePlural = $this->inflector->classify($this->componentNamePlural);
-
-        $this->componentPath = "components/$this->componentNamePlural";
     }
 
-    private function makeComponentDir(): void
+    protected function setComponentPath(): void
+    {
+        $this->componentPath = $this->componentPath = "components/$this->componentNamePlural";
+    }
+
+    protected function makeComponentDir(): void
     {
         if (file_exists($this->componentPath)) {
             return;
         }
 
         $mkdir = function () {
-            if (
-                !mkdir($this->componentPath, 0755, true)
-                && !is_dir($this->componentPath)
-            ) {
+            if ($this->dirNotCreated()) {
                 return;
             }
 
@@ -88,109 +98,102 @@ class EntityCmakeCommand extends Command
         $this->checkCreationOrFail($mkdir);
     }
 
-    private function checkCreationOrFail(callable $func): void
+    protected function dirNotCreated(): bool
     {
-        try {
-            $func();
-        } catch (Throwable $exception) {
-            $this->alert(sprintf('Directory "%s" was not created', $this->componentPath));
-            exit(Command::FAILURE);
-        }
+        return !mkdir($this->componentPath, 0755, true) && !is_dir($this->componentPath);
     }
 
-    private function makeClassName(string $type): string
+    protected function makeClassName(string $type): string
     {
-        if ($type === 'model') {
+        if ($type === static::TYPE_MODEL) {
             return $this->componentNameSingular;
         }
 
         return "{$this->componentNameSingular}{$this->inflector->classify($type)}";
     }
 
-
-    private function createModel(): void
+    protected function createModel(): void
     {
-        $classname = $this->makeClassName('model');
+        $classname = $this->makeClassName(static::TYPE_MODEL);
 
         $this->modelName = $classname;
 
         if ($this->confirm("Would you like to create a $classname model?")) {
             $this->call(ModelCmakeCommand::class, [
-                'name' => $classname,
-                'component' => $this->componentNamePlural,
-                '--force' => (bool)$this->option('force')
+                static::ARG_NAME => $classname,
+                static::ARG_COMPONENT => $this->componentNamePlural,
+                static::OPT_FORCE => (bool) $this->option(static::SELF_OPT_FORCE)
             ]);
         }
     }
 
-    private function createController(): void
+    protected function createController(): void
     {
         $classname = $this->makeClassName('controller');
 
         if ($this->confirm("Would you like to create a $classname?")) {
             Artisan::call(ControllerCmakeCommand::class, [
-                'name' => $classname,
-                'component' => $this->componentNamePlural,
-                '--model' => $this->modelName,
-                '--force' => (bool)$this->option('force')
+                static::ARG_NAME => $classname,
+                static::ARG_COMPONENT => $this->componentNamePlural,
+                static::OPT_MODEL => $this->modelName,
+                static::OPT_FORCE => (bool) $this->option(static::SELF_OPT_FORCE)
             ], $this->consoleOutput);
         }
     }
 
-    private function createSeeder(): void
+    protected function createSeeder(): void
     {
         $classname = $this->makeClassName('seeder');
 
         if ($this->confirm("Would you like to create a $classname?")) {
             $this->call(SeederCmakeCommand::class, [
-                'name' => $classname,
-                'component' => $this->componentNamePlural,
-                '--force' => (bool)$this->option('force')
+                static::ARG_NAME => $classname,
+                static::ARG_COMPONENT => $this->componentNamePlural,
+                static::OPT_FORCE => (bool) $this->option(static::SELF_OPT_FORCE)
             ]);
         }
     }
 
-    private function createFactory(): void
+    protected function createFactory(): void
     {
         $classname = $this->makeClassName('factory');
 
         if ($this->confirm("Would you like to create a $classname?")) {
             $this->call(FactoryCmakeCommand::class, [
-                'name' => $classname,
-                'component' => $this->componentNamePlural,
-                '--model' => $this->modelName,
-                '--force' => (bool)$this->option('force')
+                static::ARG_NAME => $classname,
+                static::ARG_COMPONENT => $this->componentNamePlural,
+                static::OPT_MODEL => $this->modelName,
+                static::OPT_FORCE => (bool) $this->option(static::SELF_OPT_FORCE)
             ]);
         }
     }
 
-    private function createRepository(): void
+    protected function createRepository(): void
     {
         $classname = $this->makeClassName('controller');
 
         if ($this->confirm("Would you like to create a $classname?")) {
             Artisan::call(RepositoryCmakeCommand::class, [
-                'name' => $classname,
-                'component' => $this->componentNamePlural,
-                '--model' => $this->modelName,
-                '--force' => (bool)$this->option('force')
+                static::ARG_NAME => $classname,
+                static::ARG_COMPONENT => $this->componentNamePlural,
+                static::OPT_MODEL => $this->modelName,
+                static::OPT_FORCE => (bool) $this->option(static::SELF_OPT_FORCE)
             ], $this->consoleOutput);
         }
     }
 
-    private function createProvider(): void
+    protected function createProvider(): void
     {
         $classname = $this->makeClassName('service provider');
 
         if ($this->confirm("Would you like to create a $classname?")) {
             $this->call(ProviderCmakeCommand::class, [
-                'name' => $classname,
-                'component' => $this->componentNamePlural,
-                '--force' => (bool)$this->option('force')
+                static::ARG_NAME => $classname,
+                static::ARG_COMPONENT => $this->componentNamePlural,
+                static::OPT_FORCE => (bool) $this->option(static::SELF_OPT_FORCE)
             ]);
         }
     }
-
 
     protected function getOptions(): array
     {
@@ -203,5 +206,15 @@ class EntityCmakeCommand extends Command
                 null
             ]
         ];
+    }
+
+    protected function checkCreationOrFail(callable $func): void
+    {
+        try {
+            $func();
+        } catch (Throwable $exception) {
+            $this->alert(sprintf('Directory "%s" was not created', $this->componentPath));
+            exit(Command::FAILURE);
+        }
     }
 }
