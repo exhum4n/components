@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Exhum4n\Components\Database\Migrations\PostgresMigration;
 use Illuminate\Database\Schema\Blueprint;
 
-return new class extends PostgresMigration
+class {{ class }} extends PostgresMigration
 {
     protected function getSchema(): string
     {

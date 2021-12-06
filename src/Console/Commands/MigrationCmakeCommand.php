@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\Console\Commands;
 
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use Exhum4n\Components\Console\CmakeCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -20,6 +22,15 @@ class MigrationCmakeCommand extends CmakeCommand
      */
     protected $description = 'Create a new migration anonymous class';
 
+    protected Inflector $inflector;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->inflector = InflectorFactory::create()->build();
+    }
+
     protected function getClassType(): string
     {
         return 'Migration';
@@ -27,7 +38,7 @@ class MigrationCmakeCommand extends CmakeCommand
 
     protected function getRelativeNamespace(): string
     {
-        return 'Databases\Migrations';
+        return 'Database\Migrations';
     }
 
     protected function getStub(): string
@@ -56,7 +67,8 @@ class MigrationCmakeCommand extends CmakeCommand
     {
         return [
             '{{ schema }}' => $this->option('schema'),
-            '{{ table }}' => $this->option('table')
+            '{{ table }}' => $this->option('table'),
+            '{{ class }}' => $this->inflector->classify($this->option('table')),
         ];
     }
 

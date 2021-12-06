@@ -14,7 +14,9 @@ class ComponentsServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerInstallCommands();
+        $this->registerComponentCommands();
         $this->registerCmakeCommands();
+        $this->registerMigratorClassName();
         $this->registerLocalizationMiddleware();
 
         $this->registerHelpers('path_helper.php');
@@ -67,6 +69,20 @@ class ComponentsServiceProvider extends ServiceProvider
             \Exhum4n\Components\Console\Commands\SeederCmakeCommand::class,
             \Exhum4n\Components\Console\Commands\TestCmakeCommand::class
         ]);
+    }
+
+    private function registerComponentCommands(): void
+    {
+        $this->commands([
+            \Exhum4n\Components\Console\Commands\MigrateCommand::class,
+        ]);
+    }
+
+    private function registerMigratorClassName(): void
+    {
+        $this->app->singleton(\Illuminate\Database\Migrations\Migrator::class, function ($app) {
+            return $app['migrator'];
+        });
     }
 
     private function replaceExceptionHandler(): void

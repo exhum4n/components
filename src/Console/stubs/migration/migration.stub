@@ -6,7 +6,7 @@ use Exhum4n\Components\Database\Migrations\PostgresMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends PostgresMigration
+class {{ class }} extends PostgresMigration
 {
     protected function getSchema(): string
     {
