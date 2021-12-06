@@ -13,6 +13,9 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class MigrateCommand extends IlluminateCommand
 {
+    protected const MIGRATION_TABLE = 'migrations';
+    protected const MIGRATION_COLUMN = 'migration';
+
     protected $name = 'components:migrate';
 
     protected ConsoleOutput $consoleOutput;
@@ -43,9 +46,9 @@ class MigrateCommand extends IlluminateCommand
     protected function getCompletedMigrations(): array
     {
         if ($this->checkIfMigrationsTableExists()) {
-            return DB::table('migrations')
-                ->get('migration')
-                ->pluck('migration')
+            return DB::table(static::MIGRATION_TABLE)
+                ->get(static::MIGRATION_COLUMN)
+                ->pluck(static::MIGRATION_COLUMN)
                 ->toArray();
         }
 
@@ -54,7 +57,7 @@ class MigrateCommand extends IlluminateCommand
 
     protected function checkIfMigrationsTableExists(): bool
     {
-        return Schema::hasTable('migrations');
+        return Schema::hasTable(static::MIGRATION_TABLE);
     }
 
     protected function runMigrations(): void
