@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Exhum4n\Components\Mails\Mail;
+
+class {{ class }} extends Mail
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function build(): self
+    {
+        return $this->view('view.name');
+    }
+}

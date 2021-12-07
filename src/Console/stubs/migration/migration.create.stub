@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+use Exhum4n\Components\Database\Migrations\PostgresMigration;
+use Illuminate\Database\Schema\Blueprint;
+
+class {{ class }} extends PostgresMigration
+{
+    protected function getSchema(): string
+    {
+        return '{{ schema }}';
+    }
+
+    protected function getTable(): string
+    {
+        return '{{ table }}';
+    }
+
+    protected function getBlueprint(): Closure
+    {
+        return static function (Blueprint $table): void {
+            $table->id();
+            $table->timestamps();
+        };
+    }
+};

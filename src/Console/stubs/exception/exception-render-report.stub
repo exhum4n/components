@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Exception;
+
+class {{ class }} extends Exception
+{
+    public function report(): ?bool
+    {
+        //
+    }
+
+    public function render(Request $request)
+    {
+        //
+    }
+}
