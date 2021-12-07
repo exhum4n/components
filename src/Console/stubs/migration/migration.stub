@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+/** @noinspection PhpIllegalPsrClassPathInspection */
+
 use Exhum4n\Components\Database\Migrations\PostgresMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
