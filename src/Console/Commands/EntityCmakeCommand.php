@@ -170,7 +170,7 @@ class EntityCmakeCommand extends Command
 
     protected function createRepository(): void
     {
-        $classname = $this->makeClassName('controller');
+        $classname = $this->makeClassName('repository');
 
         if ($this->confirm("Would you like to create a $classname?")) {
             Artisan::call(RepositoryCmakeCommand::class, [

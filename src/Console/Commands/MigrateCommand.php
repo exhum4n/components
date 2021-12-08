@@ -98,10 +98,10 @@ class MigrateCommand extends IlluminateCommand
         $migrationPaths = [];
 
         foreach ($this->getComponentPaths() as $componentPath) {
-            $migrationPaths += $this->createComponentMigrationPaths($componentPath);
+            $migrationPaths[] = $this->createComponentMigrationPaths($componentPath);
         }
 
-        return $migrationPaths;
+        return array_merge(...$migrationPaths);
     }
 
     protected function createForeignKey(string $migrationPath): void
