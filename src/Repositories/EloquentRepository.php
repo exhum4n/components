@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 abstract class EloquentRepository
 {
-    protected string|Model $model;
+    protected string $model;
 
     public function __construct()
     {
@@ -31,19 +31,23 @@ abstract class EloquentRepository
         return $this->model::query();
     }
 
-    public function getFirst(array $where): mixed
+    public function getFirst(array $where): ?Model
     {
         return $this->model::where($where)->first();
     }
 
-    public function getById(int $id): mixed
+    public function getById(int $id): ?Model
     {
-        return $this->getFirst(['id' => $id]);
+        return $this->getFirst([
+            'id' => $id
+        ]);
     }
 
-    public function getByName(string $name): mixed
+    public function getByName(string $name): ?Model
     {
-        return $this->getFirst(['name' => $name]);
+        return $this->getFirst([
+            'name' => $name
+        ]);
     }
 
     public function get(array $where): ?Collection
@@ -56,12 +60,13 @@ abstract class EloquentRepository
         return $this->model::all();
     }
 
-    public function getWithPagination(?int $perPage = null, ?array $filters = null): LengthAwarePaginator
+    public function getWithPagination(?array $filters = null): LengthAwarePaginator
     {
-        return $this->model::where($filters)->paginate($perPage);
+        return $this->model::where($filters)
+            ->paginate();
     }
 
-    public function create(array $data): mixed
+    public function create(array $data): ?Model
     {
         $newRecord = app($this->model);
 
@@ -71,7 +76,7 @@ abstract class EloquentRepository
         return $newRecord;
     }
 
-    public function update(Model $model, array $data): mixed
+    public function update(Model $model, array $data): ?Model
     {
         if (get_class($model) !== $this->model) {
             throw new ModelNotFoundException('Wrong model class');
@@ -99,7 +104,7 @@ abstract class EloquentRepository
         return $this->model::firstOrCreate($where);
     }
 
-    public function transactionWrapper(callable $transaction): mixed
+    public function transactionWrapper(callable $transaction)
     {
         $this->beginTransaction();
 
