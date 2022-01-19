@@ -7,14 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ControllerCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:controller';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new controller class';
 
     protected function getClassType(): string
@@ -31,12 +24,12 @@ class ControllerCmakeCommand extends CmakeCommand
     {
         if ($this->option('model')) {
             $stub = $this->option('api')
-                ? '/stubs/controller/controller.model.api.stub'
-                : '/stubs/controller/controller.model.stub';
+                ? '/Stubs/controller/controller.model.api.stub'
+                : '/Stubs/controller/controller.model.stub';
         } else {
             $stub = $this->option('api')
-                ? '/stubs/controller/controller.api.stub'
-                : '/stubs/controller/controller.stub';
+                ? '/Stubs/controller/controller.api.stub'
+                : '/Stubs/controller/controller.stub';
         }
 
         return $this->resolveStubPath($stub);

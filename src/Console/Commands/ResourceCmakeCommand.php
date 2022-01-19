@@ -8,14 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ResourceCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:resource';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new resource class';
 
     protected function getClassType(): string
@@ -31,8 +24,8 @@ class ResourceCmakeCommand extends CmakeCommand
     protected function getStub(): string
     {
         return $this->option('collection')
-            ? $this->resolveStubPath('/stubs/resource/resource-collection.stub')
-            : $this->resolveStubPath('/stubs/resource/resource.stub');
+            ? $this->resolveStubPath('/Stubs/resource/resource-collection.stub')
+            : $this->resolveStubPath('/Stubs/resource/resource.stub');
     }
 
     protected function getReplaces(): array

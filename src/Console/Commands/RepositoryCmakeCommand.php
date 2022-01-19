@@ -7,14 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class RepositoryCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:repository';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new repository class';
 
     protected function getClassType(): string
@@ -30,8 +23,8 @@ class RepositoryCmakeCommand extends CmakeCommand
     protected function getStub(): string
     {
         return $this->option('model')
-            ? $this->resolveStubPath('/stubs/repository/repository.stub')
-            : $this->resolveStubPath('/stubs/repository/repository.plain.stub');
+            ? $this->resolveStubPath('/Stubs/repository/repository.stub')
+            : $this->resolveStubPath('/Stubs/repository/repository.plain.stub');
     }
 
     protected function getReplaces(): array

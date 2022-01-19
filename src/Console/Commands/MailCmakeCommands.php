@@ -6,14 +6,7 @@ use Exhum4n\Components\Console\CmakeCommand;
 
 class MailCmakeCommands extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:mail';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new email class';
 
     protected function getClassType(): string
@@ -28,7 +21,7 @@ class MailCmakeCommands extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/mail/mail.stub');
+        return $this->resolveStubPath('/Stubs/mail/mail.stub');
     }
 
     protected function getReplaces(): array

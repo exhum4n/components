@@ -17,12 +17,7 @@ class MigrateCommand extends IlluminateCommand
     protected const MIGRATION_COLUMN = 'migration';
 
     protected $name = 'components:migrate';
-
     protected ConsoleOutput $consoleOutput;
-
-    /**
-     * @var array<string>
-     */
     protected array $completedMigrations;
 
     public function __construct()
@@ -110,7 +105,7 @@ class MigrateCommand extends IlluminateCommand
 
         $className = $this->getClassName($migrationPath);
 
-        (new $className())->addForeignKey();
+        (new $className())->getForeignKey();
     }
 
     protected function getComponentPaths(): array

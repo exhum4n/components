@@ -19,14 +19,7 @@ class EntityCmakeCommand extends Command
     protected const SELF_OPT_FORCE = 'force';
     protected const TYPE_MODEL = 'model';
 
-    /**
-     * @var string
-     */
     protected $name = 'cmake:entity';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new entity';
 
     protected Inflector $inflector;

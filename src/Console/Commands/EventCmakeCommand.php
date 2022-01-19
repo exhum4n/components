@@ -8,14 +8,7 @@ use Exhum4n\Components\Console\CmakeCommand;
 
 class EventCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:event';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new event class';
 
     protected function getClassType(): string
@@ -30,7 +23,7 @@ class EventCmakeCommand extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/event/event.stub');
+        return $this->resolveStubPath('/Stubs/event/event.stub');
     }
 
     protected function getReplaces(): array

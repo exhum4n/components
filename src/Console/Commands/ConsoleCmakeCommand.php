@@ -7,14 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ConsoleCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:command';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new Artisan command';
 
     protected function getClassType(): string
@@ -29,7 +22,7 @@ class ConsoleCmakeCommand extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/console/console.stub');
+        return $this->resolveStubPath('/Stubs/console/console.stub');
     }
 
     protected function getReplaces(): array

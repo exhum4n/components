@@ -8,14 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class FactoryCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:factory';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new factory class';
 
     protected function getClassType(): string
@@ -30,7 +23,7 @@ class FactoryCmakeCommand extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/factory/factory.stub');
+        return $this->resolveStubPath('/Stubs/factory/factory.stub');
     }
 
     protected function executeCommand(): int

@@ -6,14 +6,7 @@ use Exhum4n\Components\Console\CmakeCommand;
 
 class ChannelCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:channel';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new channel class';
 
     protected function getClassType(): string
@@ -28,7 +21,7 @@ class ChannelCmakeCommand extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/channel/channel.stub');
+        return $this->resolveStubPath('/Stubs/channel/channel.stub');
     }
 
     protected function getReplaces(): array

@@ -7,14 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class RuleCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:rule';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new validation rule';
 
     protected function getClassType(): string
@@ -29,7 +22,7 @@ class RuleCmakeCommand extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/rule/rule.stub');
+        return $this->resolveStubPath('/Stubs/rule/rule.stub');
     }
 
     protected function getReplaces(): array

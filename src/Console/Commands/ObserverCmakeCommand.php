@@ -7,14 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ObserverCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:observer';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new observer class';
 
     protected function getClassType(): string
@@ -30,8 +23,8 @@ class ObserverCmakeCommand extends CmakeCommand
     protected function getStub(): string
     {
         return $this->option('model')
-            ? $this->resolveStubPath('/stubs/observer/observer.stub')
-            : $this->resolveStubPath('/stubs/observer/observer.plain.stub');
+            ? $this->resolveStubPath('/Stubs/observer/observer.stub')
+            : $this->resolveStubPath('/Stubs/observer/observer.plain.stub');
     }
 
     protected function getReplaces(): array

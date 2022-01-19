@@ -6,14 +6,7 @@ use Exhum4n\Components\Console\CmakeCommand;
 
 class CastCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:cast';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new cast class';
 
     protected function getClassType(): string
@@ -28,7 +21,7 @@ class CastCmakeCommand extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/cast/cast.stub');
+        return $this->resolveStubPath('/Stubs/cast/cast.stub');
     }
 
     protected function getReplaces(): array

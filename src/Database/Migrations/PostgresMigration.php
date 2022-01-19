@@ -29,11 +29,9 @@ abstract class PostgresMigration extends Migration
         Schema::create($this->table(), $this->getBlueprint());
     }
 
-    public function addForeignKey(): void
+    protected function getForeignKey(): Closure
     {
-        if (method_exists($this, 'getForeignKey')) {
-            Schema::table($this->table(), $this->getForeignKey());
-        }
+        return function () {};
     }
 
     public function down(): void

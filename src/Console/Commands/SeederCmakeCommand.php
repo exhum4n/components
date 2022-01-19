@@ -6,14 +6,7 @@ use Exhum4n\Components\Console\CmakeCommand;
 
 class SeederCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:seeder';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new seeder class';
 
     protected function getClassType(): string
@@ -28,7 +21,7 @@ class SeederCmakeCommand extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/seeder/seeder.stub');
+        return $this->resolveStubPath('/Stubs/seeder/seeder.stub');
     }
 
     protected function getReplaces(): array
