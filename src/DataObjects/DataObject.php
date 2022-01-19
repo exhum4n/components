@@ -6,8 +6,12 @@ namespace Exhum4n\Components\DataObjects;
 
 abstract class DataObject
 {
-    public function __construct(array $values = [])
+    public function __construct(?array $values = [])
     {
+        if (is_null($values)) {
+            return;
+        }
+
         foreach ($values as $key => $value) {
             $key = lcfirst($key);
 

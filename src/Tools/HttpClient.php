@@ -6,8 +6,8 @@ namespace Exhum4n\Components\Tools;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\TransferStats;
-use Psr\Http\Message\ResponseInterface;
 
 class HttpClient
 {
@@ -17,11 +17,11 @@ class HttpClient
 
     protected array $headers = [];
 
-    protected string $authorization;
+    protected string $authorization = '';
 
     protected array $params = [];
 
-    protected ResponseInterface $response;
+    protected Response $response;
 
     protected TransferStats $stats;
 
@@ -45,7 +45,7 @@ class HttpClient
 
     public function setParams(array $params): HttpClient
     {
-        $this->params = $params;
+        $this->params = array_merge($this->params, $params);
 
         return $this;
     }
@@ -62,6 +62,11 @@ class HttpClient
         $this->json = array_merge($this->json, $json);
 
         return $this;
+    }
+
+    public function authorize(string $token): void
+    {
+        $this->authorization = "Basic $token";
     }
 
     public function get(string $uri): ?array
@@ -141,13 +146,6 @@ class HttpClient
         $this->method = $method;
 
         return $this;
-    }
-
-    public function authorize(string $key, string $secret): void
-    {
-        $credentials = base64_encode("$key:$secret");
-
-        $this->authorization = "Basic $credentials";
     }
 
     private function getDefaultHeaders(): array
