@@ -9,11 +9,15 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 abstract class EloquentRepository
 {
+    /**
+     * @var string|Model
+     */
     protected string $model;
 
     public function __construct()
@@ -31,6 +35,11 @@ abstract class EloquentRepository
         return $this->model::query();
     }
 
+    /**
+     * @param array $where
+     *
+     * @return EloquentModel|Model
+     */
     public function getFirst(array $where): ?Model
     {
         return $this->model::where($where)->first();
@@ -38,16 +47,12 @@ abstract class EloquentRepository
 
     public function getById(int $id): ?Model
     {
-        return $this->getFirst([
-            'id' => $id
-        ]);
+        return $this->getFirst(['id' => $id]);
     }
 
-    public function getByName(string $name): ?Model
+    public function getByName(string $name)
     {
-        return $this->getFirst([
-            'name' => $name
-        ]);
+        return $this->getFirst(['name' => $name]);
     }
 
     public function get(array $where): ?Collection
@@ -60,13 +65,12 @@ abstract class EloquentRepository
         return $this->model::all();
     }
 
-    public function getWithPagination(?array $filters = null): LengthAwarePaginator
+    public function getWithPagination(?int $perPage = null, ?array $filters = null): LengthAwarePaginator
     {
-        return $this->model::where($filters)
-            ->paginate();
+        return $this->model::where($filters)->paginate($perPage);
     }
 
-    public function create(array $data): ?Model
+    public function create(array $data)
     {
         $newRecord = app($this->model);
 
@@ -76,7 +80,7 @@ abstract class EloquentRepository
         return $newRecord;
     }
 
-    public function update(Model $model, array $data): ?Model
+    public function update(Model $model, array $data)
     {
         if (get_class($model) !== $this->model) {
             throw new ModelNotFoundException('Wrong model class');
