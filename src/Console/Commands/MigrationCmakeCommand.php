@@ -12,14 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class MigrationCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:migration';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new migration anonymous class';
 
     protected Inflector $inflector;
@@ -43,7 +36,7 @@ class MigrationCmakeCommand extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/migration/migration.create.stub');
+        return $this->resolveStubPath('/Stubs/migration/migration.create.stub');
     }
 
     protected function executeCommand(): int

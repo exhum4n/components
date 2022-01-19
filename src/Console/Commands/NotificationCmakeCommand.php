@@ -6,14 +6,7 @@ use Exhum4n\Components\Console\CmakeCommand;
 
 class NotificationCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:notification';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new notification class';
 
     protected function getClassType(): string
@@ -28,7 +21,7 @@ class NotificationCmakeCommand extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/notification/notification.stub');
+        return $this->resolveStubPath('/Stubs/notification/notification.stub');
     }
 
     protected function getReplaces(): array

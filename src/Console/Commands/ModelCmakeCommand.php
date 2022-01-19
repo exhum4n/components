@@ -7,14 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ModelCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:model';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new Eloquent model class';
 
     protected function getClassType(): string
@@ -30,8 +23,8 @@ class ModelCmakeCommand extends CmakeCommand
     protected function getStub(): string
     {
         return $this->option('pivot')
-            ? $this->resolveStubPath('/stubs/model/model.pivot.stub')
-            : $this->resolveStubPath('/stubs/model/model.stub');
+            ? $this->resolveStubPath('/Stubs/model/model.pivot.stub')
+            : $this->resolveStubPath('/Stubs/model/model.stub');
     }
 
     protected function getReplaces(): array

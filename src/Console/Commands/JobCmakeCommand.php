@@ -7,14 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class JobCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:job';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new job class';
 
     protected function getClassType(): string
@@ -30,8 +23,8 @@ class JobCmakeCommand extends CmakeCommand
     protected function getStub(): string
     {
         return $this->option('sync')
-            ? $this->resolveStubPath('/stubs/job/job.stub')
-            : $this->resolveStubPath('/stubs/job/job.queued.stub');
+            ? $this->resolveStubPath('/Stubs/job/job.stub')
+            : $this->resolveStubPath('/Stubs/job/job.queued.stub');
     }
 
     protected function getReplaces(): array

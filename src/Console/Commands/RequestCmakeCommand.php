@@ -6,14 +6,7 @@ use Exhum4n\Components\Console\CmakeCommand;
 
 class RequestCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:request';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new form request class';
 
     protected function getClassType(): string
@@ -28,7 +21,7 @@ class RequestCmakeCommand extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/request/request.stub');
+        return $this->resolveStubPath('/Stubs/request/request.stub');
     }
 
     protected function getReplaces(): array

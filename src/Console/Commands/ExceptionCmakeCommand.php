@@ -7,14 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ExceptionCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:exception';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new exception class';
 
     protected function getClassType(): string
@@ -31,12 +24,12 @@ class ExceptionCmakeCommand extends CmakeCommand
     {
         if ($this->option('render')) {
             $stub = $this->option('report')
-                ? '/stubs/exception/exception-render-report.stub'
-                : '/stubs/exception/exception-render.stub';
+                ? '/Stubs/exception/exception-render-report.stub'
+                : '/Stubs/exception/exception-render.stub';
         } else {
             $stub = $this->option('report')
-                ? '/stubs/exception/exception-report.stub'
-                : '/stubs/exception/exception.stub';
+                ? '/Stubs/exception/exception-report.stub'
+                : '/Stubs/exception/exception.stub';
         }
 
         return $this->resolveStubPath($stub);

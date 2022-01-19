@@ -9,14 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ListenerCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:listener';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new listener class';
 
     protected function getClassType(): string
@@ -33,13 +26,13 @@ class ListenerCmakeCommand extends CmakeCommand
     {
         if ($this->option('queued')) {
             return $this->option('event')
-                ? $this->resolveStubPath('/stubs/listener/listener-queued.stub')
-                : $this->resolveStubPath('/stubs/listener/listener-queued-duck.stub');
+                ? $this->resolveStubPath('/Stubs/listener/listener-queued.stub')
+                : $this->resolveStubPath('/Stubs/listener/listener-queued-duck.stub');
         }
 
         return $this->option('event')
-            ? $this->resolveStubPath('/stubs/listener/listener.stub')
-            : $this->resolveStubPath('/stubs/listener/listener-duck.stub');
+            ? $this->resolveStubPath('/Stubs/listener/listener.stub')
+            : $this->resolveStubPath('/Stubs/listener/listener-duck.stub');
     }
 
     protected function getReplaces(): array

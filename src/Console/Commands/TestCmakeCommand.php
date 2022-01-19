@@ -9,14 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class TestCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:test';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new test class';
 
     protected function getClassType(): string
@@ -38,8 +31,8 @@ class TestCmakeCommand extends CmakeCommand
         $suffix = $this->option('unit') ? '.unit.stub' : '.stub';
 
         return $this->option('pest')
-            ? $this->resolveStubPath('/stubs/test/pest' . $suffix)
-            : $this->resolveStubPath('/stubs/test/test' . $suffix);
+            ? $this->resolveStubPath('/Stubs/test/pest' . $suffix)
+            : $this->resolveStubPath('/Stubs/test/test' . $suffix);
     }
 
     protected function getReplaces(): array

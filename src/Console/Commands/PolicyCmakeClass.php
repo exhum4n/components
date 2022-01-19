@@ -7,14 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class PolicyCmakeClass extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:policy';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new policy class';
 
     protected function getClassType(): string
@@ -30,8 +23,8 @@ class PolicyCmakeClass extends CmakeCommand
     protected function getStub(): string
     {
         return $this->option('model')
-            ? $this->resolveStubPath('/stubs/policy/policy.stub')
-            : $this->resolveStubPath('/stubs/policy/policy.plain.stub');
+            ? $this->resolveStubPath('/Stubs/policy/policy.stub')
+            : $this->resolveStubPath('/Stubs/policy/policy.plain.stub');
     }
 
     protected function getReplaces(): array

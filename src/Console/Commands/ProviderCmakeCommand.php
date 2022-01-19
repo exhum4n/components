@@ -6,14 +6,7 @@ use Exhum4n\Components\Console\CmakeCommand;
 
 class ProviderCmakeCommand extends CmakeCommand
 {
-    /**
-     * @var string
-     */
     protected $name = 'cmake:provider';
-
-    /**
-     * @var string
-     */
     protected $description = 'Create a new service provider class';
 
     protected function getClassType(): string
@@ -28,7 +21,7 @@ class ProviderCmakeCommand extends CmakeCommand
 
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/provider/provider.stub');
+        return $this->resolveStubPath('/Stubs/provider/provider.stub');
     }
 
     protected function getReplaces(): array
