@@ -14,7 +14,7 @@ use Illuminate\Foundation\Http\FormRequest as BaseFormRequest;
  */
 abstract class FormRequest extends BaseFormRequest
 {
-    protected DataObject $data;
+    public DataObject $data;
 
     abstract public function rules(): array;
 
