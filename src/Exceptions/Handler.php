@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
@@ -33,6 +34,10 @@ class Handler extends ExceptionHandler
         $exceptionCode = $this->getExceptionCode($e);
         if ($e instanceof QueryException) {
             $exceptionCode = 400;
+        }
+
+        if ($e instanceof AuthenticationException) {
+            $exceptionCode = 401;
         }
 
         $errorBody = [

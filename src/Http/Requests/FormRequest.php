@@ -29,7 +29,11 @@ abstract class FormRequest extends BaseFormRequest
 
         $params = $this->route()->parameters();
         if (empty($params) === false) {
-            return array_merge($data, $params);
+            $data = array_merge($data, $params);
+        }
+
+        if (isset($data['id'])) {
+            $data['id'] = (int) $data['id'];
         }
 
         return $data;
