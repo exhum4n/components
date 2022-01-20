@@ -2,9 +2,10 @@
 
 namespace Exhum4n\Components\Console\Commands;
 
+use Exception;
+use Exhum4n\Components\Database\Migrations\PostgresMigration;
 use Illuminate\Console\Command as IlluminateCommand;
 use Illuminate\Database\Console\Migrations\MigrateCommand as IlluminateMigrateCommand;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use RuntimeException;
@@ -32,22 +33,21 @@ class MigrateCommand extends IlluminateCommand
         $this->completedMigrations = $this->getCompletedMigrations();
 
         $this->runMigrations();
-
-        $this->createForeignKeys();
+        $this->runForeignKeys();
 
         return Command::SUCCESS;
     }
 
     protected function getCompletedMigrations(): array
     {
-        if ($this->checkIfMigrationsTableExists()) {
-            return DB::table(static::MIGRATION_TABLE)
-                ->get(static::MIGRATION_COLUMN)
-                ->pluck(static::MIGRATION_COLUMN)
-                ->toArray();
+        if ($this->checkIfMigrationsTableExists() === false) {
+            return [];
         }
 
-        return [];
+        return DB::table(static::MIGRATION_TABLE)
+            ->get(static::MIGRATION_COLUMN)
+            ->pluck(static::MIGRATION_COLUMN)
+            ->toArray();
     }
 
     protected function checkIfMigrationsTableExists(): bool
@@ -57,60 +57,73 @@ class MigrateCommand extends IlluminateCommand
 
     protected function runMigrations(): void
     {
-        foreach ($this->getComponentPaths() as $path) {
+        $paths = $this->getMigrationsPaths();
+
+        foreach ($paths as $path) {
             $this->callMigrateCommand($path);
         }
     }
 
     protected function callMigrateCommand(string $path): void
     {
-        $exitCode = Artisan::call(
-            IlluminateMigrateCommand::class,
-            ['--path' => $path],
-            $this->consoleOutput
-        );
+        $exitCode = $this->call(IlluminateMigrateCommand::class, ['--path' => $path]);
 
         if ($exitCode !== Command::SUCCESS) {
             throw new RuntimeException('Can`t run artisan make:migrate command.');
         }
     }
 
-    protected function createForeignKeys(): void
+    protected function runForeignKeys(): void
     {
-        $migrationPaths = $this->getAllMigrationPaths();
+        $migrationsPaths = $this->getMigrationsPaths();
 
-        foreach ($migrationPaths as $migrationPath) {
+        foreach ($migrationsPaths as $migrationPath) {
             if ($this->checkIfMigrationAlreadyProcessed($migrationPath)) {
                 continue;
             }
 
-            $this->createForeignKey($migrationPath);
+            $this->createForeignKeys($migrationPath);
         }
     }
 
-    protected function getAllMigrationPaths(): array
+    protected function createForeignKeys(string $migrationsDir): void
     {
-        $migrationPaths = [];
-
-        foreach ($this->getComponentPaths() as $componentPath) {
-            $migrationPaths[] = $this->createComponentMigrationPaths($componentPath);
+        $migrations = $this->getDir($migrationsDir);
+        if (empty($migrations)) {
+            return;
         }
 
-        return array_merge(...$migrationPaths);
+        foreach ($migrations as $migration) {
+            $migrationFile = "$migrationsDir/$migration";
+
+            $migrationClass = $this->getMigrationClass($migrationFile);
+
+            $migrationClass->createForeignKeys();
+        }
     }
 
-    protected function createForeignKey(string $migrationPath): void
+    protected function getMigrationClass(string $filePath): PostgresMigration
     {
-        require_once $migrationPath;
+        require_once $filePath;
 
-        $className = $this->getClassName($migrationPath);
+        $fileContent = file_get_contents($filePath);
+        if ($fileContent === false) {
+            throw new RuntimeException('Empty migration file.');
+        }
 
-        (new $className())->getForeignKey();
+        preg_match('/class\s+(\w+).*?{/s', $fileContent, $matches);
+
+        return new $matches[1]();
     }
 
-    protected function getComponentPaths(): array
+    protected function createForeignKey(): void
     {
-        $componentNames = $this->scanDirectory(base_path('components'));
+
+    }
+
+    protected function getMigrationsPaths(): array
+    {
+        $componentNames = $this->getDir(base_path('components'));
 
         $paths = [];
 
@@ -121,9 +134,9 @@ class MigrateCommand extends IlluminateCommand
         return $paths;
     }
 
-    protected function createComponentMigrationPaths(string $path): array
+    protected function getComponentMigrationPaths(string $path): array
     {
-        $migrationFiles = $this->scanDirectory(base_path($path));
+        $migrationFiles = $this->getDir(base_path($path));
 
         $paths = [];
 
@@ -141,30 +154,12 @@ class MigrateCommand extends IlluminateCommand
         return in_array($file, $this->completedMigrations, true);
     }
 
-    protected function getClassName(string $filePath): string
+    protected function getDir(string $path): array
     {
-        $fileContent = $this->getFileContent($filePath);
-
-        preg_match('/class\s+(\w+).*?{/s', $fileContent, $matches);
-
-        return $matches[1];
-    }
-
-    protected function getFileContent(string $path): string
-    {
-        $fileContent = file_get_contents($path);
-        if ($fileContent === false) {
-            throw new RuntimeException('Empty migration file.');
-        }
-
-        return $fileContent;
-    }
-
-    protected function scanDirectory(string $path): array
-    {
-        $dirs = scandir($path);
-        if (empty($dirs)) {
-            throw new RuntimeException("$path is not a directory!");
+        try {
+            $dirs = scandir($path);
+        } catch (Exception $exception) {
+            return [];
         }
 
         $dirsWithoutDots = array_slice($dirs, 2);
