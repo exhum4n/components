@@ -14,10 +14,11 @@ class ComponentsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->initializeMigrator();
+
         $this->registerInstallCommand();
         $this->registerMigrateCommand();
         $this->registerCmakeCommands();
-        $this->registerMigratorClass();
         $this->registerLocalizationMiddleware();
         $this->registerHelpers('path_helper.php');
         $this->publishConfig('components.php');
@@ -25,23 +26,21 @@ class ComponentsServiceProvider extends ServiceProvider
         $this->replaceExceptionHandler();
     }
 
-    private function registerLocalizationMiddleware(): void
+    protected function initializeMigrator(): void
+    {
+        $this->app->singleton(\Illuminate\Database\Migrations\Migrator::class, function ($app) {
+            return $app['migrator'];
+        });
+    }
+
+    protected function registerLocalizationMiddleware(): void
     {
         $router = $this->app['router'];
 
         $router->pushMiddlewareToGroup('api', Localization::class);
     }
 
-    private function registerInstallCommand(): void
-    {
-        $name = 'exhum4n.components.install';
-
-        $this->registerCommand($name, ComponentsInstall::class);
-
-        $this->commands($name);
-    }
-
-    private function registerCmakeCommands(): void
+    protected function registerCmakeCommands(): void
     {
         $this->commands([
             \Exhum4n\Components\Console\Commands\CastCmakeCommand::class,
@@ -71,25 +70,27 @@ class ComponentsServiceProvider extends ServiceProvider
         ]);
     }
 
-    private function registerMigrateCommand(): void
+    protected function registerMigrateCommand(): void
     {
         $this->commands([
             \Exhum4n\Components\Console\Commands\MigrateCommand::class,
         ]);
     }
 
-    private function registerMigratorClass(): void
-    {
-        $this->app->singleton(Migrator::class, function ($app) {
-            return $app['migrator'];
-        });
-    }
-
-    private function replaceExceptionHandler(): void
+    protected function replaceExceptionHandler(): void
     {
         $this->app->bind(
             ExceptionHandler::class,
             Handler::class
         );
+    }
+
+    final function registerInstallCommand(): void
+    {
+        $name = 'exhum4n.components.install';
+
+        $this->registerCommand($name, ComponentsInstall::class);
+
+        $this->commands($name);
     }
 }

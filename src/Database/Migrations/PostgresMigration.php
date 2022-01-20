@@ -6,6 +6,7 @@ namespace Exhum4n\Components\Database\Migrations;
 
 use Closure;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -29,7 +30,16 @@ abstract class PostgresMigration extends Migration
         Schema::create($this->table(), $this->getBlueprint());
     }
 
-    protected function getForeignKey(): Closure
+    public function createForeignKeys(): void
+    {
+        try {
+            Schema::table($this->table(), $this->getForeignKeys());
+        } catch (QueryException $exception) {
+            return;
+        }
+    }
+
+    protected function getForeignKeys(): Closure
     {
         return function () {};
     }
