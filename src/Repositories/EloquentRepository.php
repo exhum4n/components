@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @noinspection PhpUnused
+ */
+
 declare(strict_types=1);
 
 namespace Exhum4n\Components\Repositories;
@@ -9,15 +13,11 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 abstract class EloquentRepository
 {
-    /**
-     * @var string|Model
-     */
     protected string $model;
 
     public function __construct()
@@ -35,32 +35,31 @@ abstract class EloquentRepository
         return $this->model::query();
     }
 
-    /**
-     * @param array $where
-     *
-     * @return EloquentModel|Model
-     */
-    public function getFirst(array $where): ?Model
+    public function getFirst(array $where): mixed
     {
         return $this->model::where($where)->first();
     }
 
-    public function getById(int $id): ?Model
+    public function getById(int|string $id, string $pKey = 'id'): mixed
     {
-        return $this->getFirst(['id' => $id]);
+        return $this->getFirst([
+            $pKey => $id
+        ]);
     }
 
-    public function getByName(string $name)
+    public function getByName(string $name): mixed
     {
-        return $this->getFirst(['name' => $name]);
+        return $this->getFirst([
+            'name' => $name
+        ]);
     }
 
-    public function get(array $where): ?Collection
+    public function get(array $where): Collection
     {
         return $this->model::where($where)->get();
     }
 
-    public function getAll(): ?Collection
+    public function getAll(): Collection
     {
         return $this->model::all();
     }
@@ -70,9 +69,9 @@ abstract class EloquentRepository
         return $this->model::where($filters)->paginate($perPage);
     }
 
-    public function create(array $data)
+    public function create(array $data): mixed
     {
-        $newRecord = app($this->model);
+        $newRecord = new $this->model();
 
         $newRecord->fill($data);
         $newRecord->save();
@@ -80,22 +79,21 @@ abstract class EloquentRepository
         return $newRecord;
     }
 
-    public function update(Model $model, array $data)
+    public function update(Model $model, array $data): Model
     {
         if (get_class($model) !== $this->model) {
-            throw new ModelNotFoundException('Wrong model class');
+            throw new ModelNotFoundException('wrong_model_class');
         }
 
         $model->fill($data);
-
         $model->save();
 
         return $model;
     }
 
-    public function delete(int $id): int
+    public function delete(string|int $pKey): void
     {
-        return $this->model::destroy($id);
+        $this->model::destroy($pKey);
     }
 
     public function exist(array $where): bool
@@ -103,12 +101,12 @@ abstract class EloquentRepository
         return $this->model::where($where)->exists();
     }
 
-    public function firstOrCreate(array $where): Model
+    public function firstOrCreate(array $where): mixed
     {
         return $this->model::firstOrCreate($where);
     }
 
-    public function transactionWrapper(callable $transaction)
+    public function transactionWrapper(callable $transaction): mixed
     {
         $this->beginTransaction();
 

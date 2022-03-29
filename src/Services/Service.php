@@ -1,6 +1,8 @@
 <?php
 
-/** @noinspection PhpUndefinedMethodInspection */
+/**
+ * @noinspection PhpUndefinedMethodInspection
+ */
 
 declare(strict_types=1);
 

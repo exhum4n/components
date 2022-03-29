@@ -66,7 +66,7 @@ class HttpClient
 
     public function authorize(string $token): void
     {
-        $this->authorization = "Basic $token";
+        $this->authorization = "Bearer $token";
     }
 
     public function get(string $uri): ?array
