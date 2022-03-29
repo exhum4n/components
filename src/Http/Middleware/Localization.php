@@ -7,13 +7,17 @@ namespace Exhum4n\Components\Http\Middleware;
 use Closure;
 use Exhum4n\Components\Exceptions\LocaleNotSupported;
 use Illuminate\Http\Request;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class Localization
 {
     /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws LocaleNotSupported
      */
-    public function handle(Request $request, Closure $next): mixed
+    public function handle(Request $request, Closure $next)
     {
         $supportedLocales = config('components.languages');
 

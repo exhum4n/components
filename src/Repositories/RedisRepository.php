@@ -1,7 +1,10 @@
 <?php
 
-/** @noinspection PhpUndefinedMethodInspection */
-/** @noinspection PhpPossiblePolymorphicInvocationInspection */
+/**
+ * @noinspection PhpUndefinedMethodInspection
+ * @noinspection PhpPossiblePolymorphicInvocationInspection
+ * @noinspection PhpUnused
+ */
 
 declare(strict_types=1);
 

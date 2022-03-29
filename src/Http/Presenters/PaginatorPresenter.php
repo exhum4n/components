@@ -1,11 +1,16 @@
 <?php
 
+/**
+ * @noinspection PhpUnused
+ */
+
 declare(strict_types=1);
 
 namespace Exhum4n\Components\Http\Presenters;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use JetBrains\PhpStorm\ArrayShape;
 
 abstract class PaginatorPresenter extends SimplePresenter
 {
@@ -23,6 +28,9 @@ abstract class PaginatorPresenter extends SimplePresenter
         return response()->json($presentationData, $this->code);
     }
 
+    #[ArrayShape([
+        'items' => "array"
+    ])]
     private function getItems(): array
     {
         return [
@@ -30,6 +38,15 @@ abstract class PaginatorPresenter extends SimplePresenter
         ];
     }
 
+    #[ArrayShape([
+        'total' => "int",
+        'nextPageUrl' => "null|string",
+        'previousPageUrl' => "null|string",
+        'currentPage' => "int",
+        'lastPage' => "int",
+        'perPage' => "int",
+        'path' => "null|string"
+    ])]
     private function getPaginator(): array
     {
         return [

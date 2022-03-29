@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @noinspection PhpUnused
+ */
+
 declare(strict_types=1);
 
 namespace Exhum4n\Components\Http\Requests;
@@ -28,15 +32,17 @@ abstract class FormRequest extends BaseFormRequest
         $data = parent::all();
 
         $params = $this->route()->parameters();
-        if (empty($params) === false) {
-            $data = array_merge($data, $params);
+        if (empty($params)) {
+            return $data;
         }
 
-        if (isset($data['id'])) {
-            $data['id'] = (int) $data['id'];
+        foreach ($params as $key => $param) {
+            if (is_numeric($param)) {
+                $params[$key] = (int) $param;
+            }
         }
 
-        return $data;
+        return array_merge($data, $params);
     }
 
     /**
