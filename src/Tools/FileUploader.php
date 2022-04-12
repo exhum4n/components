@@ -27,11 +27,6 @@ class FileUploader
         $this->disc = $disc;
     }
 
-    /**
-     * @param UploadedFile $file
-     *
-     * @return string
-     */
     public function upload(UploadedFile $file): string
     {
         return $file->storeAs($this->path, $file->getClientOriginalName(), $this->disc);

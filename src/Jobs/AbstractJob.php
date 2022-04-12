@@ -18,4 +18,6 @@ abstract class AbstractJob implements ShouldQueue
     use SerializesModels;
 
     protected array $eventsAfterProcessing = [];
+
+    abstract public function handle(): void;
 }

@@ -1,13 +1,18 @@
 <?php
 
+/**
+ * @noinspection PhpUnused
+ * @noinspection PhpPossiblePolymorphicInvocationInspection
+ */
+
 declare(strict_types=1);
 
 namespace Exhum4n\Components\Tools;
 
+use Exhum4n\Components\Http\Response;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\TransferStats;
+use Psr\Http\Message\ResponseInterface;
 
 class HttpClient
 {
@@ -15,19 +20,21 @@ class HttpClient
 
     protected string $method = 'GET';
 
-    protected array $headers = [];
-
     protected string $authorization = '';
 
-    protected array $params = [];
+    protected array $headers = [];
 
-    protected Response $response;
+    protected array $formParams = [];
 
-    protected TransferStats $stats;
+    protected array $queryParams = [];
 
-    protected array $json = [];
+    protected array $jsonBody = [];
 
-    private array $requestOptions = [];
+    protected array|string $body;
+
+    protected ResponseInterface $response;
+
+    private array $options = [];
 
     public function __construct(string $baseUri = '')
     {
@@ -38,14 +45,9 @@ class HttpClient
         ]);
     }
 
-    public function getStats(): TransferStats
+    public function setQueryParams(array $queryParams): HttpClient
     {
-        return $this->stats;
-    }
-
-    public function setParams(array $params): HttpClient
-    {
-        $this->params = array_merge($this->params, $params);
+        $this->queryParams = array_merge($this->queryParams, $queryParams);
 
         return $this;
     }
@@ -57,26 +59,53 @@ class HttpClient
         return $this;
     }
 
-    public function setJson(array $json): HttpClient
+    public function setJsonBody(array $json): HttpClient
     {
-        $this->json = array_merge($this->json, $json);
+        $this->jsonBody = array_merge($this->jsonBody, $json);
 
         return $this;
     }
 
-    public function authorize(string $token): void
+    public function setFormParams(array $params): HttpClient
+    {
+        $this->formParams = array_merge($this->formParams, $params);
+
+        return $this;
+    }
+
+    public function setBody(array|string $body): HttpClient
+    {
+        $this->body = $body;
+
+        return $this;
+    }
+
+    public function setOptions(array $params): HttpClient
+    {
+        $this->options = array_merge($this->options, $params);
+
+        return $this;
+    }
+
+    public function setBearerToken(string $token): void
     {
         $this->authorization = "Bearer $token";
     }
 
-    public function get(string $uri): ?array
+    /**
+     * @throws GuzzleException
+     */
+    public function get(string $uri): Response
     {
         $this->setMethod('GET');
 
         return $this->go($uri);
     }
 
-    public function post(string $uri): ?array
+    /**
+     * @throws GuzzleException
+     */
+    public function post(string $uri): Response
     {
         $this->setMethod('POST');
 
@@ -84,71 +113,78 @@ class HttpClient
     }
 
     /**
-     * @noinspection PhpPossiblePolymorphicInvocationInspection
+     * @throws GuzzleException
      */
-    protected function go(string $uri = '/', bool $debug = false): ?array
+    public function delete(string $uri): Response
     {
-        $defaultOptions = $this->getDefaultRequestOptions($debug);
+        $this->setMethod('DELETE');
 
-        if ($this->json !== null) {
-            $this->requestOptions['json'] = $this->json;
+        return $this->go($uri);
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    public function patch(string $uri): Response
+    {
+        $this->setMethod('PATCH');
+
+        return $this->go($uri);
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    public function put(string $uri): Response
+    {
+        $this->setMethod('PUT');
+
+        return $this->go($uri);
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    protected function go(string $uri = '/'): Response
+    {
+        if (empty($this->jsonBody) === false) {
+            $this->options['json'] = json_encode($this->jsonBody);
         }
 
-        $this->requestOptions['headers'] = $this->getDefaultHeaders();
+        if (empty($this->formParams) === false) {
+            $this->options['form_params'] = $this->formParams;
+        }
+
+        if (empty($this->body) === false) {
+            $this->options['body'] = $this->body;
+        }
+
+        if (empty($this->queryParams) === false) {
+            $this->options['query'] = $this->queryParams;
+        }
+
+        $this->options['headers'] = $this->getDefaultHeaders();
         if ($this->headers !== null) {
-            $this->requestOptions['headers'] = array_merge($this->headers, $this->requestOptions['headers']);
+            $this->options['headers'] = array_merge($this->headers, $this->options['headers']);
         }
 
-        if ($this->params !== null) {
-            $this->requestOptions['query'] = $this->params;
-        }
-
-        $this->requestOptions += $defaultOptions;
-
-        try {
-            $response = $this->client->request($this->method, $uri, $this->requestOptions);
-        } catch (GuzzleException $exception) {
-            return $exception->getResponse();
-        }
-
-        $this->response = $response;
+        $this->response = $this->client->request($this->method, $uri, $this->options);
 
         $this->reset();
 
-        return $this->getJsonResponse();
+        return new Response($this->response);
     }
 
-    public function getStatusCode(): int
+    protected function reset(): void
     {
-        return $this->response->getStatusCode();
-    }
-
-    public function getJsonResponse(): ?array
-    {
-        return json_decode($this->getResponse(), true);
-    }
-
-    public function getResponse(): string
-    {
-        return (string) $this->response->getBody();
-    }
-
-    public function reset(): void
-    {
-        $this->params = [];
-        $this->json = [];
+        $this->queryParams = [];
+        $this->jsonBody = [];
+        $this->formParams = [];
 
         $this->headers = $this->getDefaultHeaders();
     }
 
-    public function setMethod(string $method): HttpClient
-    {
-        $this->method = $method;
-
-        return $this;
-    }
-
-    private function getDefaultHeaders(): array
+    protected function getDefaultHeaders(): array
     {
         $headers = [
             'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)' .
@@ -162,17 +198,10 @@ class HttpClient
         return $headers;
     }
 
-    private function getDefaultRequestOptions(bool $debug): array
+    final function setMethod(string $method): HttpClient
     {
-        return [
-            'debug' => $debug,
-            'form_params' => $this->params,
-            'on_stats' => function (TransferStats $stats): void {
-                $this->stats = $stats;
-            },
-            'allow_redirects' => [
-                'max' => 10
-            ]
-        ];
+        $this->method = $method;
+
+        return $this;
     }
 }
