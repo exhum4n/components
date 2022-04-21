@@ -66,11 +66,11 @@ abstract class FormRequest extends BaseFormRequest
         $validator->after(function (\Illuminate\Validation\Validator $validator) {
             $data = $validator->getData();
 
-            $this->fillDataObject($data);
+            $this->afterValidation($data);
         });
     }
 
-    protected function fillDataObject(array $data): void
+    protected function afterValidation(array $data): void
     {
     }
 }

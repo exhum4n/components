@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Mail;
 class SendEmailJob extends AbstractJob
 {
     protected Mailable $mail;
-
     protected string $email;
 
     public function __construct(string $email, Mailable $mail)

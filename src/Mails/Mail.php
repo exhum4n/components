@@ -17,4 +17,6 @@ abstract class Mail extends Mailable
     {
         $this->locale = app()->getLocale();
     }
+
+    abstract public function build(): Mailable;
 }
