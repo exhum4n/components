@@ -28,8 +28,13 @@ abstract class Seeder extends BaseSeeder
         $this->command->warn("Seeding: $seedClass");
 
         foreach ($this->records as $record) {
-            $this->repository->firstOrCreate($record);
+            $this->seed($record);
         }
+    }
+
+    protected function seed(array $record): void
+    {
+        $this->repository->firstOrCreate($record);
     }
 
     abstract protected function getRecords(): array;
