@@ -3,6 +3,7 @@
 namespace Exhum4n\Components\Console\Commands;
 
 use Exhum4n\Components\Console\CmakeCommand;
+use JetBrains\PhpStorm\Pure;
 
 class MailCmakeCommands extends CmakeCommand
 {
@@ -24,6 +25,7 @@ class MailCmakeCommands extends CmakeCommand
         return $this->resolveStubPath('/Stubs/mail/mail.stub');
     }
 
+    #[Pure]
     protected function getReplaces(): array
     {
         return [

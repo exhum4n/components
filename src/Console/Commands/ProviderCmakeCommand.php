@@ -3,6 +3,7 @@
 namespace Exhum4n\Components\Console\Commands;
 
 use Exhum4n\Components\Console\CmakeCommand;
+use JetBrains\PhpStorm\Pure;
 
 class ProviderCmakeCommand extends CmakeCommand
 {
@@ -24,6 +25,7 @@ class ProviderCmakeCommand extends CmakeCommand
         return $this->resolveStubPath('/Stubs/provider/provider.stub');
     }
 
+    #[Pure]
     protected function getReplaces(): array
     {
         return [

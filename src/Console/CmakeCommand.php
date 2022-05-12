@@ -28,7 +28,7 @@ abstract class CmakeCommand extends Command
 
         $exitCode = $this->executeCommand();
 
-        if ($exitCode === Command::SUCCESS) {
+        if ($exitCode === static::SUCCESS) {
             $this->info("{$this->getClassType()} created successfully.");
         }
 
@@ -51,7 +51,7 @@ abstract class CmakeCommand extends Command
 
         $this->files->put($classPath, $classContent);
 
-        return Command::SUCCESS;
+        return static::SUCCESS;
     }
 
     protected function resolveDependencies(): void
@@ -88,7 +88,7 @@ abstract class CmakeCommand extends Command
         } catch (FileNotFoundException $e) {
             $this->error($e->getMessage());
 
-            exit(Command::FAILURE);
+            exit(static::FAILURE);
         }
     }
 
@@ -107,7 +107,7 @@ abstract class CmakeCommand extends Command
         if (!$this->option('force') && $this->files->exists($classPath)) {
             $this->error("{$this->getClassType()} already exists! Use --force option to rewrite.");
 
-            exit(Command::FAILURE);
+            exit(static::FAILURE);
         }
     }
 

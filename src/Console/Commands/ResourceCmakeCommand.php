@@ -3,7 +3,7 @@
 namespace Exhum4n\Components\Console\Commands;
 
 use Exhum4n\Components\Console\CmakeCommand;
-use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
 
 class ResourceCmakeCommand extends CmakeCommand
@@ -28,6 +28,7 @@ class ResourceCmakeCommand extends CmakeCommand
             : $this->resolveStubPath('/Stubs/resource/resource.stub');
     }
 
+    #[Pure]
     protected function getReplaces(): array
     {
         return [

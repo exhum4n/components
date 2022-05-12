@@ -6,6 +6,7 @@ namespace Exhum4n\Components\Console;
 
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\InflectorFactory;
+use JetBrains\PhpStorm\Pure;
 use LogicException;
 
 class NamespaceBuilder
@@ -46,6 +47,7 @@ class NamespaceBuilder
         return $this->className;
     }
 
+    #[Pure]
     public function getNamespace(): string
     {
         return $this->createNamespace($this->relativeNamespace);
@@ -60,11 +62,6 @@ class NamespaceBuilder
         ];
 
         return implode('\\', $path);
-    }
-
-    public function getNamespaceAndClassName(): string
-    {
-        return "{$this->getNamespace()}\\$this->className";
     }
 
     public function getClassPath(bool $relative = false): string

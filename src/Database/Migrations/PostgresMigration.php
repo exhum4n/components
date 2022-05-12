@@ -34,7 +34,7 @@ abstract class PostgresMigration extends Migration
     {
         try {
             Schema::table($this->table(), $this->getForeignKeys());
-        } catch (QueryException $exception) {
+        } catch (QueryException) {
             return;
         }
     }

@@ -16,11 +16,11 @@ use Psr\Http\Message\ResponseInterface;
 
 class HttpClient
 {
-    protected Client $client;
+    public Client $client;
 
     protected string $method = 'GET';
 
-    protected string $authorization = '';
+    protected ?string $authorization = null;
 
     protected array $headers = [];
 
@@ -41,7 +41,7 @@ class HttpClient
         $this->client = new Client([
             'base_uri' => $baseUri,
             'cookies' => true,
-            'timeout' => 60
+            'timeout' => 60,
         ]);
     }
 
@@ -148,7 +148,7 @@ class HttpClient
     protected function go(string $uri = '/'): Response
     {
         if (empty($this->jsonBody) === false) {
-            $this->options['json'] = json_encode($this->jsonBody);
+            $this->options['json'] = $this->jsonBody;
         }
 
         if (empty($this->formParams) === false) {
@@ -186,10 +186,7 @@ class HttpClient
 
     protected function getDefaultHeaders(): array
     {
-        $headers = [
-            'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)' .
-                ' Chrome/83.0.4103.116 Safari/537.36',
-        ];
+        $headers = [];
 
         if ($this->authorization !== null) {
             $headers['Authorization'] = $this->authorization;

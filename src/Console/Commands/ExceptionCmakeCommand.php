@@ -3,6 +3,7 @@
 namespace Exhum4n\Components\Console\Commands;
 
 use Exhum4n\Components\Console\CmakeCommand;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
 
 class ExceptionCmakeCommand extends CmakeCommand
@@ -35,6 +36,7 @@ class ExceptionCmakeCommand extends CmakeCommand
         return $this->resolveStubPath($stub);
     }
 
+    #[Pure]
     protected function getReplaces(): array
     {
         return [

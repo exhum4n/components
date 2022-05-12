@@ -3,6 +3,7 @@
 namespace Exhum4n\Components\Console\Commands;
 
 use Exhum4n\Components\Console\CmakeCommand;
+use JetBrains\PhpStorm\Pure;
 
 class MiddlewareCmakeCommand extends CmakeCommand
 {
@@ -24,6 +25,7 @@ class MiddlewareCmakeCommand extends CmakeCommand
         return $this->resolveStubPath('/Stubs/middleware/middleware.stub');
     }
 
+    #[Pure]
     protected function getReplaces(): array
     {
         return [

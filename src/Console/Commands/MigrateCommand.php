@@ -158,7 +158,7 @@ class MigrateCommand extends IlluminateCommand
     {
         try {
             $dirs = scandir($path);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return [];
         }
 

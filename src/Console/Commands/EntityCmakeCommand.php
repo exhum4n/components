@@ -102,7 +102,7 @@ class EntityCmakeCommand extends Command
             return $this->componentNameSingular;
         }
 
-        return "{$this->componentNameSingular}{$this->inflector->classify($type)}";
+        return "$this->componentNameSingular{$this->inflector->classify($type)}";
     }
 
     protected function createModel(): void
@@ -205,9 +205,9 @@ class EntityCmakeCommand extends Command
     {
         try {
             $func();
-        } catch (Throwable $exception) {
+        } catch (Throwable) {
             $this->alert(sprintf('Directory "%s" was not created', $this->componentPath));
-            exit(Command::FAILURE);
+            exit(static::FAILURE);
         }
     }
 }

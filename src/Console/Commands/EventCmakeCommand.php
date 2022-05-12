@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Exhum4n\Components\Console\Commands;
 
 use Exhum4n\Components\Console\CmakeCommand;
+use JetBrains\PhpStorm\Pure;
 
 class EventCmakeCommand extends CmakeCommand
 {
@@ -26,6 +27,7 @@ class EventCmakeCommand extends CmakeCommand
         return $this->resolveStubPath('/Stubs/event/event.stub');
     }
 
+    #[Pure]
     protected function getReplaces(): array
     {
         return [

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Exhum4n\Components\Console\Commands;
 
 use Exhum4n\Components\Console\CmakeCommand;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
 
 class TestCmakeCommand extends CmakeCommand
@@ -35,6 +36,7 @@ class TestCmakeCommand extends CmakeCommand
             : $this->resolveStubPath('/Stubs/test/test' . $suffix);
     }
 
+    #[Pure]
     protected function getReplaces(): array
     {
         return [

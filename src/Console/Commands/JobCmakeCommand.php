@@ -3,6 +3,7 @@
 namespace Exhum4n\Components\Console\Commands;
 
 use Exhum4n\Components\Console\CmakeCommand;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
 
 class JobCmakeCommand extends CmakeCommand
@@ -27,6 +28,7 @@ class JobCmakeCommand extends CmakeCommand
             : $this->resolveStubPath('/Stubs/job/job.queued.stub');
     }
 
+    #[Pure]
     protected function getReplaces(): array
     {
         return [

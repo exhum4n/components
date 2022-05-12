@@ -1,6 +1,9 @@
 <?php
 
-/** @noinspection PhpIncludeInspection */
+/**
+ * @noinspection PhpIncludeInspection
+ * @noinspection PhpUnused
+ */
 
 declare(strict_types=1);
 

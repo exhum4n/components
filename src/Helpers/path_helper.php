@@ -9,7 +9,7 @@ if (function_exists('migrations_path') === false) {
     {
         try {
             $class_info = new ReflectionClass($className);
-        } catch (ReflectionException $exception) {
+        } catch (ReflectionException) {
             throw new ClassNotFoundError('Cannot find class', $className);
         }
 

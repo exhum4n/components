@@ -3,6 +3,7 @@
 namespace Exhum4n\Components\Console\Commands;
 
 use Exhum4n\Components\Console\CmakeCommand;
+use JetBrains\PhpStorm\Pure;
 
 class SeederCmakeCommand extends CmakeCommand
 {
@@ -24,6 +25,7 @@ class SeederCmakeCommand extends CmakeCommand
         return $this->resolveStubPath('/Stubs/seeder/seeder.stub');
     }
 
+    #[Pure]
     protected function getReplaces(): array
     {
         return [
