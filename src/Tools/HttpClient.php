@@ -18,6 +18,8 @@ class HttpClient
 {
     public Client $client;
 
+    protected GuzzleException $exception;
+
     protected string $method = 'GET';
 
     protected ?string $authorization = null;
@@ -90,6 +92,11 @@ class HttpClient
     public function setBearerToken(string $token): void
     {
         $this->authorization = "Bearer $token";
+    }
+
+    public function setBasicAuth(string $token): void
+    {
+        $this->authorization = "Basic $token";
     }
 
     /**
