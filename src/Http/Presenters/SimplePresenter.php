@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace Exhum4n\Components\Http\Presenters;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 abstract class SimplePresenter
 {
-    protected int $code = 200;
-
-    public function present(): JsonResponse
+    public function present(int $code = 200): JsonResponse|Response
     {
-        return response()->json($this->getPresentationData(), $this->code);
+        $presentationData = $this->getPresentationData();
+        if (is_null($presentationData)) {
+            return response(status: $code);
+        }
+
+        return response()->json($this->getPresentationData(), $code);
     }
 
-    abstract protected function getPresentationData(): array;
+    abstract protected function getPresentationData(): ?array;
 }
