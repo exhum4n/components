@@ -30,7 +30,7 @@ abstract class PaginatorPresenter extends SimplePresenter
     private function getItems(): array
     {
         return [
-            'items' => $this->getPresentationData()
+            'items' => $this->getPresentationData()['data'] ?? []
         ];
     }
 
