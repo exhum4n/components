@@ -12,7 +12,7 @@ use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-class MigrateCommand extends IlluminateCommand
+class Migrate extends IlluminateCommand
 {
     protected const MIGRATION_TABLE = 'migrations';
     protected const MIGRATION_COLUMN = 'migration';
@@ -116,11 +116,6 @@ class MigrateCommand extends IlluminateCommand
         return new $matches[1]();
     }
 
-    protected function createForeignKey(): void
-    {
-
-    }
-
     protected function getMigrationsPaths(): array
     {
         $componentNames = $this->getDir(base_path('components'));
@@ -129,19 +124,6 @@ class MigrateCommand extends IlluminateCommand
 
         foreach ($componentNames as $name) {
             $paths[] = "components/$name/Database/Migrations";
-        }
-
-        return $paths;
-    }
-
-    protected function getComponentMigrationPaths(string $path): array
-    {
-        $migrationFiles = $this->getDir(base_path($path));
-
-        $paths = [];
-
-        foreach ($migrationFiles as $name) {
-            $paths[] = "$path/$name";
         }
 
         return $paths;

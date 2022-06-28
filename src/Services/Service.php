@@ -11,6 +11,7 @@ namespace Exhum4n\Components\Services;
 use Exhum4n\Components\Repositories\EloquentRepository;
 use Exhum4n\Components\Repositories\RedisRepository;
 use Exhum4n\Components\Traits\HasRepository;
+use Exhum4n\Components\Traits\Loggable;
 use Exhum4n\Components\Traits\UsesRedis;
 
 abstract class Service

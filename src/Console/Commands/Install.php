@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Exhum4n\Components\Console;
+namespace Exhum4n\Components\Console\Commands;
 
+use Exhum4n\Components\Console\Installer;
 use Exhum4n\Components\Providers\ComponentsServiceProvider;
 
-class ComponentsInstall extends Installer
+class Install extends Installer
 {
     public function handle(): void
     {

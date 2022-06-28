@@ -8,6 +8,7 @@ namespace Exhum4n\Components\Http\Controllers;
 
 use Exhum4n\Components\Services\Service;
 use Exhum4n\Components\Traits\HasService;
+use Exhum4n\Components\Traits\Loggable;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
@@ -25,6 +26,10 @@ abstract class Controller extends BaseController
 
         if (in_array(HasService::class, $traits)) {
             $this->initializeService();
+        }
+
+        if (in_array(Loggable::class, $traits)) {
+            $this->initLogger();
         }
 
         $this->applyMiddleware();
