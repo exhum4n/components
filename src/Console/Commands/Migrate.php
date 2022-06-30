@@ -3,21 +3,19 @@
 namespace Exhum4n\Components\Console\Commands;
 
 use Exception;
+use Exhum4n\Components\Console\Command;
 use Exhum4n\Components\Database\Migrations\PostgresMigration;
-use Illuminate\Console\Command as IlluminateCommand;
 use Illuminate\Database\Console\Migrations\MigrateCommand as IlluminateMigrateCommand;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use RuntimeException;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-class Migrate extends IlluminateCommand
+class Migrate extends Command
 {
     protected const MIGRATION_TABLE = 'migrations';
     protected const MIGRATION_COLUMN = 'migration';
 
-    protected $name = 'components:migrate';
     protected ConsoleOutput $consoleOutput;
     protected array $completedMigrations;
 
@@ -28,14 +26,12 @@ class Migrate extends IlluminateCommand
         $this->consoleOutput = new ConsoleOutput();
     }
 
-    public function handle(): int
+    public function handle(): void
     {
         $this->completedMigrations = $this->getCompletedMigrations();
 
-        $this->runMigrations();
+        $this->runMigrations($this->hasOption('force'));
         $this->runForeignKeys();
-
-        return Command::SUCCESS;
     }
 
     protected function getCompletedMigrations(): array
@@ -55,22 +51,21 @@ class Migrate extends IlluminateCommand
         return Schema::hasTable(static::MIGRATION_TABLE);
     }
 
-    protected function runMigrations(): void
+    protected function runMigrations(bool $force = false): void
     {
         $paths = $this->getMigrationsPaths();
 
         foreach ($paths as $path) {
-            $this->callMigrateCommand($path);
+            $this->callMigrateCommand($path, $force);
         }
     }
 
-    protected function callMigrateCommand(string $path): void
+    protected function callMigrateCommand(string $path, bool $force = false): void
     {
-        $exitCode = $this->call(IlluminateMigrateCommand::class, ['--path' => $path]);
-
-        if ($exitCode !== Command::SUCCESS) {
-            throw new RuntimeException('Can`t run artisan make:migrate command.');
-        }
+        $this->call(IlluminateMigrateCommand::class, [
+            '--path' => $path,
+            '--force' => $force
+        ]);
     }
 
     protected function runForeignKeys(): void
@@ -150,5 +145,10 @@ class Migrate extends IlluminateCommand
         }
 
         return $dirsWithoutDots;
+    }
+
+    protected function getSignature(): string
+    {
+        return 'components:migrate {--force=}';
     }
 }
