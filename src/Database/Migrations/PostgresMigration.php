@@ -12,15 +12,24 @@ use Illuminate\Support\Facades\Schema;
 
 abstract class PostgresMigration extends Migration
 {
+    public string $tablePrefix;
+
     abstract protected function getSchema(): string;
 
     abstract protected function getTable(): string;
 
     abstract protected function getBlueprint(): Closure;
 
-    protected function table(): string
+    public function table(): string
     {
-        return "{$this->getSchema()}.{$this->getTable()}";
+        $schema = $this->getSchema();
+
+        $table = $this->getTable();
+        if (isset($this->tablePrefix)) {
+            $table .= $this->tablePrefix;
+        }
+
+        return "$schema.$table";
     }
 
     public function up(): void

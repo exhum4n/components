@@ -6,8 +6,10 @@ namespace Exhum4n\Components\Providers;
 
 use Exhum4n\Components\Console\Commands\Install;
 use Exhum4n\Components\Console\Commands\Migrate;
+use Exhum4n\Components\Console\Commands\Refresh;
 use Exhum4n\Components\Exceptions\Handler;
 use Exhum4n\Components\Http\Middleware\Localization;
+use Exhum4n\Components\Tools\Logger;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Database\Migrations\Migrator;
 
@@ -17,13 +19,20 @@ class ComponentsServiceProvider extends ServiceProvider
     {
         $this->initializeMigrator();
 
-        $this->registerInstallCommand();
-        $this->registerMigrateCommand();
+        $this->initLogger();
+        $this->registerCommands();
         $this->registerLocalizationMiddleware();
         $this->registerHelpers('path_helper.php');
         $this->publishConfig('components.php');
 
         $this->replaceExceptionHandler();
+    }
+
+    protected function initLogger(): void
+    {
+        $this->app->singleton('Logger', function ($app) {
+            return new Logger();
+        });
     }
 
     protected function initializeMigrator(): void
@@ -40,27 +49,20 @@ class ComponentsServiceProvider extends ServiceProvider
         $router->pushMiddlewareToGroup('web', Localization::class);
     }
 
-    protected function registerMigrateCommand(): void
+    protected function registerCommands(): void
     {
         $this->commands([
             Migrate::class,
+            Install::class,
+//            Refresh::class,
         ]);
     }
 
-    protected function replaceExceptionHandler(): void
+    final function replaceExceptionHandler(): void
     {
         $this->app->bind(
             ExceptionHandler::class,
             Handler::class
         );
-    }
-
-    final function registerInstallCommand(): void
-    {
-        $name = 'exhum4n.components.install';
-
-        $this->registerCommand($name, Install::class);
-
-        $this->commands($name);
     }
 }

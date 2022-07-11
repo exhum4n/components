@@ -2,60 +2,22 @@
 
 namespace Exhum4n\Components\Console\Commands;
 
-use Exception;
-use Exhum4n\Components\Console\Command;
-use Exhum4n\Components\Database\Migrations\PostgresMigration;
+use Exhum4n\Components\Console\Migrator;
 use Illuminate\Database\Console\Migrations\MigrateCommand as IlluminateMigrateCommand;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use RuntimeException;
-use Symfony\Component\Console\Output\ConsoleOutput;
 
-class Migrate extends Command
+class Migrate extends Migrator
 {
-    protected const MIGRATION_TABLE = 'migrations';
-    protected const MIGRATION_COLUMN = 'migration';
-
-    protected ConsoleOutput $consoleOutput;
-    protected array $completedMigrations;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->consoleOutput = new ConsoleOutput();
-    }
+    protected $description = 'Run the components migrations';
 
     public function handle(): void
     {
-        $this->completedMigrations = $this->getCompletedMigrations();
-
         $this->runMigrations($this->hasOption('force'));
         $this->runForeignKeys();
     }
 
-    protected function getCompletedMigrations(): array
-    {
-        if ($this->checkIfMigrationsTableExists() === false) {
-            return [];
-        }
-
-        return DB::table(static::MIGRATION_TABLE)
-            ->get(static::MIGRATION_COLUMN)
-            ->pluck(static::MIGRATION_COLUMN)
-            ->toArray();
-    }
-
-    protected function checkIfMigrationsTableExists(): bool
-    {
-        return Schema::hasTable(static::MIGRATION_TABLE);
-    }
-
     protected function runMigrations(bool $force = false): void
     {
-        $paths = $this->getMigrationsPaths();
-
-        foreach ($paths as $path) {
+        foreach ($this->getMigrations() as $path) {
             $this->callMigrateCommand($path, $force);
         }
     }
@@ -70,7 +32,7 @@ class Migrate extends Command
 
     protected function runForeignKeys(): void
     {
-        $migrationsPaths = $this->getMigrationsPaths();
+        $migrationsPaths = $this->getMigrations();
 
         foreach ($migrationsPaths as $migrationPath) {
             if ($this->checkIfMigrationAlreadyProcessed($migrationPath)) {
@@ -89,66 +51,14 @@ class Migrate extends Command
         }
 
         foreach ($migrations as $migration) {
-            $migrationFile = "$migrationsDir/$migration";
+            $class = $this->getMigrationClass("$migrationsDir/$migration");
 
-            $migrationClass = $this->getMigrationClass($migrationFile);
-
-            $migrationClass->createForeignKeys();
+            $class->createForeignKeys();
         }
-    }
-
-    protected function getMigrationClass(string $filePath): PostgresMigration
-    {
-        require_once $filePath;
-
-        $fileContent = file_get_contents($filePath);
-        if ($fileContent === false) {
-            throw new RuntimeException('Empty migration file.');
-        }
-
-        preg_match('/class\s+(\w+).*?{/s', $fileContent, $matches);
-
-        return new $matches[1]();
-    }
-
-    protected function getMigrationsPaths(): array
-    {
-        $componentNames = $this->getDir(base_path('components'));
-
-        $paths = [];
-
-        foreach ($componentNames as $name) {
-            $paths[] = "components/$name/Database/Migrations";
-        }
-
-        return $paths;
-    }
-
-    protected function checkIfMigrationAlreadyProcessed(string $file): bool
-    {
-        $file = preg_replace('/(?<dir>.+?)\/?(?<file>(?<name>\w+)\.(?<ext>\w+))?$/m', '$3', $file);
-
-        return in_array($file, $this->completedMigrations, true);
-    }
-
-    protected function getDir(string $path): array
-    {
-        try {
-            $dirs = scandir($path);
-        } catch (Exception) {
-            return [];
-        }
-
-        $dirsWithoutDots = array_slice($dirs, 2);
-        if ($dirsWithoutDots === false) {
-            throw new RuntimeException('Can`t remove dots from directories!');
-        }
-
-        return $dirsWithoutDots;
     }
 
     protected function getSignature(): string
     {
-        return 'components:migrate {--force=}';
+        return 'components:migrate {--force : Force the operation to run when in production}';
     }
 }
