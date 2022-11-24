@@ -1,0 +1,40 @@
+<?php
+
+/** @noinspection PhpIllegalPsrClassPathInspection */
+
+use Exhum4n\Components\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+
+class {{ class }} extends Migration
+{
+    /**
+     * @return string
+     */
+    protected function getSchema(): string
+    {
+        return '{{ component }}';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTable(): string
+    {
+        return '{{ table }}';
+    }
+
+    /**
+     * @return Closure
+     */
+    protected function getBlueprint(): Closure
+    {
+        return static function (Blueprint $table): void {
+            $table->bigIncrements('id');
+        };
+    }
+
+    protected function getForeignKeys(): Closure
+    {
+        return static function (Blueprint $table): void {};
+    }
+}

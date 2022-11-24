@@ -1,0 +1,35 @@
+{
+    "name": "exhum4n/components",
+    "description": "Components SDK",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Stanislav Churilov",
+            "email": "exhum4n.dev@gmail.com",
+            "role": "developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "predis/predis": "^1.1",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Exhum4n\\Components\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Exhum4n\\Components\\Providers\\ComponentsServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
+}

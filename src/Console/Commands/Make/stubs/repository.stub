@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Exhum4n\Components\Repositories\EloquentRepository;
+
+class {{ classname }} extends EloquentRepository
+{
+    protected function getModel(): string
+    {
+        return '';
+    }
+}

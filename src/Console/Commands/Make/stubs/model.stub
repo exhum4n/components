@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Exhum4n\Components\Models\Model;
+
+/**
+ * @property int id
+ */
+class {{ classname }} extends Model
+{
+    protected $table = '{{ component }}.{{ table }}';
+
+    protected $fillable = [];
+}
