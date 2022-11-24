@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Exhum4n\Components\Providers;
 
 use Exhum4n\Components\Catalog;
-use Exhum4n\Components\Console\Commands\Install;
 use Exhum4n\Components\Console\Commands\Make\Component;
 use Exhum4n\Components\Console\Commands\Make\Controller;
 use Exhum4n\Components\Console\Commands\Make\Migration;
@@ -68,7 +67,6 @@ class ComponentsServiceProvider extends ServiceProvider
     {
         $this->commands([
             Migrate::class,
-            Install::class,
             Wipe::class,
             Component::class,
             Migration::class,
