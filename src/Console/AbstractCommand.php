@@ -10,15 +10,21 @@ use Illuminate\Console\Command as BaseCommand;
 
 abstract class AbstractCommand extends BaseCommand
 {
-    protected array $options = [];
-
     abstract public function handle(): void;
     abstract protected function getActionName(): string;
     abstract protected function getComponentName(): string;
 
+    protected array $options = [];
+
     public function __construct()
     {
-        $this->signature = $this->getComponentName() . ':' . $this->getActionName();
+        $signature = $this->getComponentName() . ':' . $this->getActionName();
+
+        foreach ($this->options as $name => $description) {
+            $signature .= " {--$name= : $description }";
+        }
+
+        $this->signature = $signature;
 
         parent::__construct();
     }

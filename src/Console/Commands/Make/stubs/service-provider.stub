@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Exhum4n\Components\Providers\ServiceProvider;
+
+class {{ classname }} extends ServiceProvider
+{
+    public function register(): void
+    {
+    }
+
+    protected function getComponentName(): string
+    {
+        return '{{ component }}';
+    }
+}

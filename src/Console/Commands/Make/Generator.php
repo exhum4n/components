@@ -8,6 +8,17 @@ abstract class Generator extends Command
 {
     protected $name;
 
+    private array $makeOptions = [
+        'component' => 'The component name',
+    ];
+
+    public function __construct()
+    {
+        $this->options = array_merge($this->makeOptions, $this->options);
+
+        parent::__construct();
+    }
+
     public function handle(): void
     {
         $this->name = to_snake($this->input->getArgument('name'));
@@ -25,7 +36,11 @@ abstract class Generator extends Command
     {
         $names = [];
 
-        foreach (components_catalog()->toArray() as $name => $component) {
+        foreach (components_catalog()->get() as $name => $provider) {
+            if ($name === $this->getComponentName()) {
+                continue;
+            }
+
             $names[] = $name;
         }
 
@@ -34,6 +49,11 @@ abstract class Generator extends Command
 
     protected function getComponentPath(string $component): string
     {
-        return component_path(components_catalog()->getProvider($component));
+        $catalog = components_catalog();
+        if ($catalog->isExists($component)) {
+            return component_path(components_catalog()->getProvider($component));
+        }
+
+        return 'components' . DIRECTORY_SEPARATOR . $component;
     }
 }

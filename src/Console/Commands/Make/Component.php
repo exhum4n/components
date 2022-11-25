@@ -30,6 +30,10 @@ class Component extends Generator
         $this->processServices($componentsPath);
         $this->processRoutes($componentsPath);
         $this->processTraits($componentsPath);
+
+        $this->call("components:provider", [
+            'name' => $this->getName()
+        ]);
     }
 
     protected function processDatabase(string $componentsPath): void

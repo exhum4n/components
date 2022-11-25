@@ -13,6 +13,7 @@ use Exhum4n\Components\Console\Commands\Make\Repository;
 use Exhum4n\Components\Console\Commands\Make\Service;
 use Exhum4n\Components\Console\Commands\Migrate;
 use Exhum4n\Components\Console\Commands\Wipe;
+use Exhum4n\Components\Console\Commands\Make\ServiceProvider as MakeServiceProvider;
 use Exhum4n\Components\Http\Middleware\Localization;
 use Exhum4n\Components\Tools\Logger;
 use Illuminate\Database\Migrations\Migrator;
@@ -74,6 +75,7 @@ class ComponentsServiceProvider extends ServiceProvider
             Model::class,
             Repository::class,
             Service::class,
+            MakeServiceProvider::class,
         ]);
     }
 

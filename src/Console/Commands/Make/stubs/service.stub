@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
+use Exhum4n\Components\Services\Service;
+
 class {{ classname }} extends Service
 {
 }

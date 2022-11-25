@@ -1,9 +1,12 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 declare(strict_types=1);
 
 namespace Exhum4n\Components\Console\Commands\Make;
 
+use Exhum4n\Components\Exceptions\NotFoundException;
 use Illuminate\Support\Pluralizer;
 
 abstract class ClassGenerator extends Generator
@@ -19,7 +22,7 @@ abstract class ClassGenerator extends Generator
     {
         parent::handle();
 
-        $this->component = $this->choice('Choice a component', $this->getComponentsNames());
+        $this->selectComponent();
 
         $this->make($this->component);
     }
@@ -74,7 +77,7 @@ abstract class ClassGenerator extends Generator
 
     private function getStub(): string
     {
-        return file_get_contents(__DIR__ . '/stubs/' . $this->getStubName());
+        return file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'stubs' . DIRECTORY_SEPARATOR . $this->getStubName());
     }
 
     private function getTargetPath(string $component): string
@@ -97,5 +100,36 @@ abstract class ClassGenerator extends Generator
         }
 
         return $stub;
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    private function selectComponent(): void
+    {
+        $components = $this->getComponentsNames();
+
+        if (count($components) === 0 && $this->hasComponentOption() === false) {
+            throw new NotFoundException("First need to create a component");
+        }
+
+        if ($this->hasComponentOption() === false) {
+            $this->component = $this->choice('Choice a component', $components);
+
+            return;
+        }
+
+        $component = $this->option('component');
+
+        if (in_array(strtolower($component), $components) === false && $this->hasOption('force') === false) {
+            throw new NotFoundException("Component with name '$component' has not found");
+        }
+
+        $this->component = $component ?: ucfirst($this->name);
+    }
+
+    protected function hasComponentOption(): bool
+    {
+        return empty($this->option('component')) === false;
     }
 }

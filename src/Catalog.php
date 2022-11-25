@@ -16,6 +16,11 @@ class Catalog implements Arrayable
      */
     protected array $components = [];
 
+    public function get(): array
+    {
+        return $this->components;
+    }
+
     public function register(string $name, ServiceProvider $provider): void
     {
         if (isset($this->components[$name])) {
