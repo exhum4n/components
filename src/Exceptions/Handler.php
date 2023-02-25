@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\Exceptions;
 
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -31,50 +28,38 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e): JsonResponse
     {
-        $exceptionCode = $this->getExceptionCode($e);
-        if ($e instanceof QueryException) {
-            $exceptionCode = 400;
-        }
-
-        if ($e instanceof AuthenticationException) {
-            $exceptionCode = 401;
-        }
-
         $errorBody = [
-            'message' => $e->getMessage(),
+            'error' => $this->getMessage($e),
+            'detail' => $this->getDetail($e),
         ];
-
-        if ($e instanceof NotFoundHttpException) {
-            $errorBody = [
-                'message' => 'endpoint_not_found',
-            ];
-        }
-
-        if ($this->isValidationException($e)) {
-            $errorBody['message'] = trans('validation.failed');
-            $errorBody['errors'] = json_decode($e->getMessage(), true, 512, JSON_THROW_ON_ERROR);
-        }
 
         if (config('app.debug')) {
             $errorBody['trace'] = $e->getTrace();
         }
 
-        return response()->json($errorBody, $exceptionCode);
+        return response()->json($errorBody, $e->getCode());
     }
 
-    protected function getExceptionCode(Throwable $exception): int
+    protected function getMessage(Throwable $exception): string
     {
-        $code = (int) $exception->getCode();
-
-        if (empty($code) || (is_numeric($code) === false)) {
-            return Response::HTTP_FORBIDDEN;
+        if ($exception instanceof NotFoundHttpException) {
+            return 'endpoint_not_found';
         }
 
-        return $code;
+        $message = $exception->getMessage();
+        if (empty($message)) {
+            return 'internal_server_error';
+        }
+
+        return $message;
     }
 
-    protected function isValidationException(Throwable $exception): bool
+    protected function getDetail(Throwable $exception): string
     {
-        return $exception instanceof ValidationException;
+        if ($exception instanceof ValidationException) {
+            return json_decode($exception->getMessage(), true);
+        }
+
+        return 'no_details';
     }
 }

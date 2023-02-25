@@ -14,7 +14,6 @@ use Exhum4n\Components\Console\Commands\Make\Service;
 use Exhum4n\Components\Console\Commands\Migrate;
 use Exhum4n\Components\Console\Commands\Wipe;
 use Exhum4n\Components\Console\Commands\Make\ServiceProvider as MakeServiceProvider;
-use Exhum4n\Components\Http\Middleware\Localization;
 use Exhum4n\Components\Tools\Logger;
 use Illuminate\Database\Migrations\Migrator;
 
@@ -27,7 +26,6 @@ class ComponentsServiceProvider extends ServiceProvider
         $this->publishConfig('components.php');
 
         $this->registerCommands();
-        $this->registerLocalizationMiddleware();
         $this->registerHelpers([
             'path_helper.php',
             'helper.php',
@@ -57,11 +55,6 @@ class ComponentsServiceProvider extends ServiceProvider
         $this->app->singleton(Migrator::class, function ($app) {
             return $app['migrator'];
         });
-    }
-
-    protected function registerLocalizationMiddleware(): void
-    {
-        $this->app['router']->pushMiddlewareToGroup('web', Localization::class);
     }
 
     protected function registerCommands(): void
