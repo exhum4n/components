@@ -8,7 +8,5 @@ use Exhum4n\Components\Repositories\EloquentRepository;
 
 trait HasRepository
 {
-    public EloquentRepository $repository;
-
     abstract protected function getEloquentRepository(): string;
 }

@@ -9,14 +9,11 @@ declare(strict_types=1);
 
 namespace Exhum4n\Components\Services;
 
-use Exhum4n\Components\Repositories\EloquentRepository;
 use Exhum4n\Components\Traits\HasRepository;
 use Exhum4n\Components\Traits\UsesRedis;
 
 abstract class Service
 {
-    public EloquentRepository $repository;
-
     public function __construct()
     {
         $traits = class_uses_recursive(static::class);
